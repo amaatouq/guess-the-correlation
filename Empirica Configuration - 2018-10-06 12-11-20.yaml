@@ -1,0 +1,154 @@
+treatments: []
+factorTypes:
+  - _id: fth7dyokCkWyoLiNm
+    name: playerCount
+    description: The Number of players participating in the given game.
+    required: true
+    type: Integer
+    min: 1
+  - _id: dFhxCZx3LgZCMHh4h
+    name: randomizeTask
+    description: Whether to randomize the task sequence
+    required: false
+    type: Boolean
+  - _id: 4qpfRadakmZfC3DC6
+    name: botsCount
+    description: The Number of bots that should participate in a given game
+    required: false
+    type: Number
+    min: 0
+    max: 12
+  - _id: 8MaNru3vYLeFuHKGg
+    name: altersCount
+    description: The Number of connections for each player
+    required: true
+    type: Integer
+    min: 0
+    max: 12
+  - _id: mFT6Eh8efLoRiLisX
+    name: stageDuration
+    description: The maximum time in seconds for each stage before moving to the next
+    required: true
+    type: Integer
+    min: 5
+    max: 120
+  - _id: dchzzbeA77Gwgstbs
+    name: rewiring
+    description: Can the player change their alters on each round
+    required: true
+    type: Boolean
+  - _id: GwPx2jzi3RCPrKEC5
+    name: feedbackRate
+    description: how frequent the feedback is (1 = every round; 0 = never)
+    required: false
+    type: Number
+    min: 0
+    max: 1
+  - _id: 8jizkYY62i6JJjm4i
+    name: feedbackNoise
+    description: The level of noise added to performance of the alters
+    required: false
+    type: Number
+    min: 0
+    max: 1
+  - _id: kEieiwjyHC3DpZAZe
+    name: shockRate
+    description: The rate at which we change difficulties for the players
+    required: false
+    type: Number
+    min: 0
+    max: 1
+  - _id: SWSRQ5kd3n7zKeiSr
+    name: nRounds
+    description: This is the number of rounds for the game
+    required: false
+    type: Integer
+    min: 1
+    max: 20
+factors:
+  - _id: ytmjNurYozEKwu8XA
+    name: dyad
+    value: 2
+    factorTypeId: fth7dyokCkWyoLiNm
+  - _id: E6cggD8fz5jhByf2L
+    name: solo
+    value: 1
+    factorTypeId: fth7dyokCkWyoLiNm
+  - _id: wcY5yucqhQB5pTaM5
+    name: small_group
+    value: 3
+    factorTypeId: fth7dyokCkWyoLiNm
+  - _id: dfRwPizm9AMhsyPLp
+    name: 'true'
+    value: true
+    factorTypeId: dFhxCZx3LgZCMHh4h
+  - _id: v8e63WfCPCZMHBEjJ
+    name: 'false'
+    value: false
+    factorTypeId: dFhxCZx3LgZCMHh4h
+  - _id: xTcNKMCcvGFKkLeSy
+    name: 'true'
+    value: true
+    factorTypeId: dchzzbeA77Gwgstbs
+  - _id: ecqHBQ7SNq2LoWikW
+    name: 'false'
+    value: false
+    factorTypeId: dchzzbeA77Gwgstbs
+  - _id: i3xz4PtLBr9AvxDhW
+    name: no_bots
+    value: 0
+    factorTypeId: 4qpfRadakmZfC3DC6
+  - _id: HMrGK5umqHabjNmft
+    name: no_alters
+    value: 0
+    factorTypeId: 8MaNru3vYLeFuHKGg
+  - _id: Zv325QwjK3nDRz6rg
+    name: 30s
+    value: 30
+    factorTypeId: mFT6Eh8efLoRiLisX
+  - _id: RtMN6CgDuepjuudkB
+    name: rare
+    value: 0.1
+    factorTypeId: GwPx2jzi3RCPrKEC5
+  - _id: RW8SJwC9pR5Jcu594
+    name: no_noise
+    value: 0
+    factorTypeId: 8jizkYY62i6JJjm4i
+  - _id: QqJSKyonD4E6C98Nk
+    name: always
+    value: 1
+    factorTypeId: GwPx2jzi3RCPrKEC5
+  - _id: ufBERGYXpH9dk5yfb
+    name: never
+    value: 0
+    factorTypeId: GwPx2jzi3RCPrKEC5
+  - _id: SPtbTeiN2mTxgZ2BG
+    name: rare
+    value: 0.1
+    factorTypeId: kEieiwjyHC3DpZAZe
+  - _id: YgnxEK9Y3oZB9Easr
+    name: never
+    value: 0
+    factorTypeId: kEieiwjyHC3DpZAZe
+  - _id: jLoxYKT55x2PRJPt8
+    name: always
+    value: 1
+    factorTypeId: kEieiwjyHC3DpZAZe
+  - _id: mGAuQyeAyaWzXYR34
+    name: few
+    value: 5
+    factorTypeId: SWSRQ5kd3n7zKeiSr
+  - _id: xvunDTcpfFypFbH6v
+    name: half
+    value: 10
+    factorTypeId: SWSRQ5kd3n7zKeiSr
+  - _id: TxoyW2JQsWgwugevv
+    name: full
+    value: 20
+    factorTypeId: SWSRQ5kd3n7zKeiSr
+lobbyConfigs:
+  - name: default
+    timeoutType: lobby
+    timeoutInSeconds: 300
+    timeoutStrategy: fail
+    gameLobbyIds: []
