@@ -1,5 +1,4 @@
 import Empirica from "meteor/empirica:core";
-import * as _ from "meteor/underscore";
 
 // This is where you add bots, like Bob:
 

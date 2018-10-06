@@ -1,6 +1,5 @@
 import Empirica from "meteor/empirica:core";
-import { difficulties, taskData } from "./constants";
-import * as _ from "meteor/underscore";
+import { taskData } from "./constants";
 
 import "./callbacks.js";
 import "./bots.js";
@@ -12,14 +11,23 @@ import "./bots.js";
 // and the players. You can also get/set initial values on your game, players,
 // rounds and stages (with get/set methods), that will be able to use later in
 // the game.
+
+//TODO: return to this once Nicolas fixes this problem
 Empirica.gameInit((game, treatment, players) => {
   const tasks = game.treatment.randomizeTask ? _.shuffle(taskData) : taskData;
+  console.log("task data", taskData);
 
   _.times(game.treatment.nRounds, i => {
     const round = game.addRound();
 
     //we set the round with the task data for that round
+    //TODO: fixing this
+    //this should be: round.set("task",tasks[i]);
     round.set("task", tasks[i]);
+
+    //round.data = { data: { task: tasks[i] } };
+
+    console.log("pulled task data", round.get("task"));
 
     //always add the "response stage" which is the independent guess one
     round.addStage({

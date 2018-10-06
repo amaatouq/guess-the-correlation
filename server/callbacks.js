@@ -1,5 +1,4 @@
 import Empirica from "meteor/empirica:core";
-import * as _ from "meteor/underscore";
 import { difficulties } from "./constants";
 
 // onGameStart is triggered opnce per game before the game starts, and before

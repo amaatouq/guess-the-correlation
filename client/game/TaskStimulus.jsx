@@ -10,6 +10,7 @@ export default class TaskStimulus extends React.Component {
       classes.push("transparent");
     }
 
+    console.log("task",round);
     const taskDifficulty = round.get("task").difficultyPath; //getting the task data
     const taskPath = taskDifficulty[player.get("difficulty")];
 
