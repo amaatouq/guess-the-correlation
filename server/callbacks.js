@@ -5,6 +5,7 @@ import { difficulties } from "./constants";
 // the first onRoundStart. It receives the game and list of all the players in
 // the game.
 Empirica.onGameStart((game, players) => {
+  console.log("game", game._id, "started");
   //prepare players by creating the network
   const playerIds = _.pluck(players, "_id");
   players.forEach((player, i) => {
@@ -24,6 +25,7 @@ Empirica.onGameStart((game, players) => {
 // onRoundStart is triggered before each round starts, and before onStageStart.
 // It receives the same options as onGameStart, and the round that is starting.
 Empirica.onRoundStart((game, round, players) => {
+  console.log("round", round.index, "started");
   players.forEach(player => {
     player.round.set("alterIds", player.get("alterIds"));
   });
@@ -37,14 +39,18 @@ Empirica.onRoundStart((game, round, players) => {
       ) ===
       0;
   round.set("displayFeedback", feedbackTime);
+  console.log("display feedback at round", round.index, "?", feedbackTime);
 });
 
 // onRoundStart is triggered before each stage starts.
 // It receives the same options as onRoundStart, and the stage that is starting.
-Empirica.onStageStart((game, round, stage, players) => {});
+Empirica.onStageStart((game, round, stage, players) => {
+  console.log("stage", stage.name, "started");
+});
 
 // It receives the same options as onRoundEnd, and the stage that just ended.
 Empirica.onStageEnd((game, round, stage, players) => {
+  console.log("stage", stage.name, "ended");
   if (stage.name === "response") {
     computeScore(players, round);
   } else if (stage.name === "interactive") {
@@ -57,6 +63,7 @@ Empirica.onStageEnd((game, round, stage, players) => {
 // onRoundEnd is triggered after each round.
 // It receives the same options as onGameEnd, and the round that just ended.
 Empirica.onRoundEnd((game, round, players) => {
+  console.log("round", round.index, "ended");
   players.forEach(player => {
     const currentScore = player.get("cumulativeScore");
     const roundScore = player.round.get("score");
