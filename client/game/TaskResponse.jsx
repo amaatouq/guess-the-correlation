@@ -26,9 +26,15 @@ export default class TaskResponse extends React.Component {
 
   renderSubmitted = () => {
     return (
-      <Callout title={"Waiting on other players..."} icon={"automatic-updates"}>
-        Please wait until all players are ready
-      </Callout>
+      <div className={"task-response"}>
+        <Callout
+          className={"call-out"}
+          title={"Waiting on other players..."}
+          icon={"automatic-updates"}
+        >
+          Please wait until all players are ready
+        </Callout>
+      </div>
     );
   };
 
@@ -74,7 +80,7 @@ export default class TaskResponse extends React.Component {
   renderFeedback = (player, round) => {
     return (
       <div>
-        <HTMLTable className="pt-table  pt-html-table pt-html-table-bordered">
+        <HTMLTable>
           <thead>
             <tr>
               <th>Your guess</th>

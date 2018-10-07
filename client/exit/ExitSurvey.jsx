@@ -1,20 +1,15 @@
 import React from "react";
 
 import { Centered } from "meteor/empirica:core";
-
-const Radio = ({ selected, name, value, label, onChange }) => (
-  <label className="pt-control pt-radio pt-inline">
-    <input
-      type="radio"
-      name={name}
-      value={value}
-      checked={selected === value}
-      onChange={onChange}
-    />
-    <span className="pt-control-indicator" />
-    {label}
-  </label>
-);
+import {
+  Button,
+  Classes,
+  FormGroup,
+  RadioGroup,
+  TextArea,
+  Intent,
+  Radio
+} from "@blueprintjs/core";
 
 export default class ExitSurvey extends React.Component {
   static stepName = "ExitSurvey";
@@ -33,9 +28,7 @@ export default class ExitSurvey extends React.Component {
   exitMessage = (player, game) => {
     return (
       <div>
-        {" "}
         <h1> Exit Survey </h1>
-        <br />
         <h3>
           Please submit the following code to receive your bonus:{" "}
           <em>{player._id}</em>.
@@ -67,48 +60,54 @@ export default class ExitSurvey extends React.Component {
         </p>
         <form onSubmit={this.handleSubmit}>
           <div className="form-line">
-            <div className="pt-form-group">
-              <label className="pt-label" htmlFor="age">
-                Age
-              </label>
-              <div className="pt-form-content">
-                <input
-                  id="age"
-                  className="pt-input"
-                  type="number"
-                  min="0"
-                  max="150"
-                  step="1"
-                  dir="auto"
-                  name="age"
-                  value={age}
-                  onChange={this.handleChange}
-                  // required
-                />
-              </div>
-            </div>
-            <div className="pt-form-group">
-              <label className="pt-label" htmlFor="gender">
-                Gender
-              </label>
-              <div className="pt-form-content">
-                <input
-                  id="gender"
-                  className="pt-input"
-                  type="text"
-                  dir="auto"
-                  name="gender"
-                  value={gender}
-                  onChange={this.handleChange}
-                  // required
-                />
-              </div>
-            </div>
+            <FormGroup
+              inline={true}
+              label={"Age"}
+              labelFor={"age"}
+              className={"form-group"}
+            >
+              <input
+                id="age"
+                className={Classes.INPUT}
+                type="number"
+                min="0"
+                max="150"
+                step="1"
+                dir="auto"
+                name="age"
+                value={age}
+                onChange={this.handleChange}
+                // required
+              />
+            </FormGroup>
+
+            <FormGroup
+              inline={true}
+              label={"Gender"}
+              labelFor={"gender"}
+              className={"form-group"}
+            >
+              <input
+                id="gender"
+                className={Classes.INPUT}
+                type="text"
+                dir="auto"
+                name="gender"
+                value={gender}
+                onChange={this.handleChange}
+                // required
+              />
+            </FormGroup>
           </div>
 
-          <div className="pt-form-group">
-            <label className="pt-label">Highest Education Qualification</label>
-            <div className="pt-form-content">
+          <div className="form-line">
+            <RadioGroup
+              inline={true}
+              name="education"
+              label="Highest Education Qualification?"
+              onChange={this.handleChange}
+              selectedValue={education}
+            >
               <Radio
                 selected={education}
                 name="education"
@@ -137,63 +136,72 @@ export default class ExitSurvey extends React.Component {
                 label="Other"
                 onChange={this.handleChange}
               />
-            </div>
+            </RadioGroup>
           </div>
 
           <div className="form-line thirds">
-            <div className="pt-form-group">
-              <label className="pt-label" htmlFor="age">
-                How would you describe your strategy in the game?
-              </label>
-              <div className="pt-form-content">
-                <textarea
-                  className="pt-input pt-fill"
-                  dir="auto"
-                  name="strategy"
-                  value={strategy}
-                  onChange={this.handleChange}
-                />
-              </div>
-            </div>
-            <div className="pt-form-group">
-              <label className="pt-label" htmlFor="age">
-                Do you feel the pay was fair?
-              </label>
-              <div className="pt-form-content">
-                <textarea
-                  className="pt-input pt-fill"
-                  dir="auto"
-                  name="fair"
-                  value={fair}
-                  onChange={this.handleChange}
-                />
-              </div>
-            </div>
-            <div className="pt-form-group">
-              <label className="pt-label" htmlFor="age">
-                Feedback, including problems you encountered.
-              </label>
-              <div className="pt-form-content">
-                <textarea
-                  className="pt-input pt-fill"
-                  dir="auto"
-                  name="feedback"
-                  value={feedback}
-                  onChange={this.handleChange}
-                />
-              </div>
-            </div>
+            <FormGroup
+              className={"form-group"}
+              inline={false}
+              label={"How would you describe your strategy in the game?"}
+              labelFor={"strategy"}
+              //className={"form-group"}
+            >
+              <TextArea
+                id="strategy"
+                large={true}
+                intent={Intent.PRIMARY}
+                onChange={this.handleChange}
+                value={strategy}
+                fill={true}
+                name="strategy"
+              />
+            </FormGroup>
+
+            <FormGroup
+              className={"form-group"}
+              inline={false}
+              label={"Do you feel the pay was fair?"}
+              labelFor={"fair"}
+              //className={"form-group"}
+            >
+              <TextArea
+                id="fair"
+                name="fair"
+                large={true}
+                intent={Intent.PRIMARY}
+                onChange={this.handleChange}
+                value={fair}
+                fill={true}
+              />
+            </FormGroup>
+
+            <FormGroup
+              className={"form-group"}
+              inline={false}
+              label={"Feedback, including problems you encountered."}
+              labelFor={"fair"}
+              //className={"form-group"}
+            >
+              <TextArea
+                id="feedback"
+                name="feedback"
+                large={true}
+                intent={Intent.PRIMARY}
+                onChange={this.handleChange}
+                value={feedback}
+                fill={true}
+              />
+            </FormGroup>
           </div>
 
-          <button type="submit" className="pt-button pt-intent-primary">
+          <Button type="submit" intent={"primary"} rightIcon={"key-enter"}>
             Submit
-            <span className="pt-icon-standard pt-icon-key-enter pt-align-right" />
-          </button>
+          </Button>
         </form>{" "}
       </div>
     );
   };
-
 
   render() {
     const { player, game } = this.props;
