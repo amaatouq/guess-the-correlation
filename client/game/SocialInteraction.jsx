@@ -1,7 +1,7 @@
 import React from "react";
 
 import { AlertToaster } from "meteor/empirica:core";
-import * as _ from "meteor/underscore";
+import { Icon, Button, Card, Elevation } from "@blueprintjs/core";
 
 export default class SocialInteraction extends React.Component {
   handleUnfollow = (alterId, event) => {
@@ -32,13 +32,14 @@ export default class SocialInteraction extends React.Component {
 
     return (
       //if they did not submit, they can unfollow, otherwise, the button is inactive
-      <button
-        className="pt-button pt-fill pt-intent-primary"
+      <Button
+        fill={true}
+        intent={"primary"}
         onClick={this.handleUnfollow.bind(this, alterId)}
         disabled={player.stage.submitted}
       >
         Unfollow
-      </button>
+      </Button>
     );
   }
 
@@ -50,18 +51,15 @@ export default class SocialInteraction extends React.Component {
     const feedbackTime = round.get("displayFeedback");
 
     return (
-      <div className="alter pt-card pt-elevation-2" key={otherPlayer._id}>
+      <Card className={"alter"} elevation={Elevation.TWO} key={otherPlayer._id}>
         <div className="info">
           <img src={otherPlayer.get("avatar")} className="profile-avatar" />
           {/*only show the scores of the alters if feedback is allowed*/}
-          {feedbackTime ? (
-            <span className="pt-icon-standard pt-icon-dollar" />
-          ) : null}
-          {feedbackTime ? <span>{cumulativeScore}</span> : null}
+          {feedbackTime ? <Icon icon={"dollar"} /> : null}
+          {feedbackTime ? <span>{cumulativeScore} </span> : null}
           {feedbackTime ? (
             <span style={{ color: otherPlayer.round.get("scoreColor") }}>
               <strong>
-                {" "}
                 (+
                 {roundScore})
               </strong>
@@ -69,7 +67,7 @@ export default class SocialInteraction extends React.Component {
           ) : null}
         </div>
         {game.treatment.rewiring ? this.renderUnfollow(otherPlayer._id) : null}
-      </div>
+      </Card>
     );
   }
 
@@ -91,7 +89,7 @@ export default class SocialInteraction extends React.Component {
 
         {feedbackTime ? (
           <p style={{ textIndent: "1em" }}>
-            <span className="pt-icon-standard pt-icon-dollar" />
+            <Icon icon={"dollar"} />
             <span>{cumulativeScore}</span>
             <span style={{ color: player.round.get("scoreColor") }}>
               <strong>
@@ -118,14 +116,16 @@ export default class SocialInteraction extends React.Component {
     const feedbackTime = round.get("displayFeedback");
     return (
       <div className="non-alter" key={otherPlayer._id}>
-        <button
-          className="pt-button pt-intent-primary pt-icon-add pt-minimal"
+        <Button
+          intent={"primary"}
+          minimal={true}
+          icon={"add"}
           onClick={this.handleFollow.bind(this, otherPlayer._id)}
           disabled={player.stage.submitted}
         />
         <img src={otherPlayer.get("avatar")} className="profile-avatar" />
         {feedbackTime ? (
-          <span className="pt-icon-standard pt-icon-dollar" />
+         <Icon icon={'dollar'}/>
         ) : null}
         {feedbackTime ? <span>{cumulativeScore} </span> : null}
         {feedbackTime ? (

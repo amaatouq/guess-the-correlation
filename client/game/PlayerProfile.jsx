@@ -1,7 +1,7 @@
-import PropTypes from "prop-types";
 import React from "react";
 
 import Timer from "./Timer.jsx";
+import { Card, Icon} from "@blueprintjs/core";
 
 export default class PlayerProfile extends React.Component {
   renderProfile() {
@@ -19,7 +19,7 @@ export default class PlayerProfile extends React.Component {
     return (
       <div className="profile-score">
         <h4>Total score</h4>
-        <span className="pt-icon-standard pt-icon-dollar" />
+        <Icon icon="dollar" iconSize={20} title={'dollar-sign'}/>
         <span>{player.get("cumulativeScore") || 0}</span>
       </div>
     );
@@ -29,12 +29,14 @@ export default class PlayerProfile extends React.Component {
     const { stage, round } = this.props;
 
     return (
-      <aside className="pt-card player-profile">
-        {this.renderProfile()}
-        {/*We always show individual level feedback*/}
-        {this.renderScore()}
-        <Timer stage={stage} />
-      </aside>
+      <Card className={"player-profile"}>
+        <aside>
+          {this.renderProfile()}
+          {/*We always show individual level feedback*/}
+          {this.renderScore()}
+          <Timer stage={stage} />
+        </aside>
+      </Card>
     );
   }
 }

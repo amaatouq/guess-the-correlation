@@ -1,6 +1,7 @@
 import React from "react";
 
 import { Centered } from "meteor/empirica:core";
+import { Button, ButtonGroup } from "@blueprintjs/core";
 
 export default class InstructionStepOne extends React.Component {
   render() {
@@ -17,14 +18,26 @@ export default class InstructionStepOne extends React.Component {
             veritatis et labore.
           </p>
 
-          <p>
-            <button type="button" onClick={onPrev} disabled={!hasPrev}>
+          <ButtonGroup className={"button-group"}>
+            <Button
+              type="button"
+              onClick={onPrev}
+              disabled={!hasPrev}
+              icon="arrow-left"
+            >
               Previous
-            </button>
-            <button type="button" onClick={onNext} disabled={!hasNext}>
+            </Button>
+            <Button
+              type="button"
+              onClick={onNext}
+              disabled={!hasNext}
+              rightIcon="arrow-right"
+              intent="primary"
+              alignText={'right'}
+            >
               Next
-            </button>
-          </p>
+            </Button>
+          </ButtonGroup>
         </div>
       </Centered>
     );

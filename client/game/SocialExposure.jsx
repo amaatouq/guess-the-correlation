@@ -1,30 +1,27 @@
 import React from "react";
 import Slider from "meteor/empirica:slider";
-import * as _ from "meteor/underscore";
+import { Card, Elevation } from "@blueprintjs/core";
 
 export default class SocialExposure extends React.Component {
   renderSocialInteraction = otherPlayer => {
     // "or 0" here if the user hasn't submitted a guess, defaulting to 0
     const guess = otherPlayer.round.get("guess");
     return (
-      <div className="alter pt-card pt-elevation-2" key={otherPlayer._id}>
+      <Card className={"alter"} elevation={Elevation.TWO} key={otherPlayer._id}>
         <img
           src={otherPlayer.get("avatar")}
           className="profile-avatar"
           title={otherPlayer._id}
         />
-        <div className={`range ${guess === undefined ? "empty" : ""}`}>
-          <Slider
-            min={0}
-            max={1}
-            stepSize={0.01}
-            labelRenderer={() => ""}
-            value={guess}
-            showTrackFill={false}
-            disabled
-          />
-        </div>
-      </div>
+        <Slider
+          min={0}
+          max={1}
+          stepSize={0.01}
+          value={guess}
+          showTrackFill={false}
+          disabled
+        />
+      </Card>
     );
   };
 

@@ -1,5 +1,13 @@
 import React from "react";
 import Slider from "meteor/empirica:slider";
+import {
+  HTMLTable,
+  Button,
+  Callout,
+  FormGroup,
+  Label,
+  RangeSlider
+} from "@blueprintjs/core";
 
 export default class TaskResponse extends React.Component {
   handleChange = num => {
@@ -18,64 +26,77 @@ export default class TaskResponse extends React.Component {
 
   renderSubmitted = () => {
     return (
-      <div className="task-response">
-        <div className="pt-callout pt-icon-automatic-updates">
-          <h5>Waiting on other players...</h5>
-          Please wait until all players are ready
-        </div>
-      </div>
+      <Callout title={"Waiting on other players..."} icon={"automatic-updates"}>
+        Please wait until all players are ready
+      </Callout>
     );
   };
 
   renderCurrentGuess = player => {
     return (
-      <label className="pt-label">
+      <Label>
         Your current guess of the correlation is: {player.round.get("guess")}
-      </label>
+      </Label>
     );
   };
 
-  renderSlider(player, isOutcome) {
+  renderSlider(player, round, isOutcome) {
     const guess = player.round.get("guess");
+    const correctAnswer = round.get("task").correctAnswer;
     return (
-      <div className="pt-form-content">
-        <Slider
-          min={0}
-          max={1}
-          stepSize={0.01}
-          labelStepSize={0.25}
-          onChange={this.handleChange}
-          value={value}
-          hideHandleOnEmpty
-        />
-      </div>
+      <FormGroup>
+        {isOutcome ? (
+          <RangeSlider
+            className={"range-slider"}
+            disabled={true}
+            min={0}
+            max={1}
+            stepSize={0.01}
+            labelStepSize={0.25}
+            value={[guess, correctAnswer].sort()}
+          />
+        ) : (
+          <Slider
+            min={0}
+            max={1}
+            stepSize={0.01}
+            labelStepSize={0.25}
+            onChange={this.handleChange}
+            value={guess}
+            disabled={isOutcome}
+            hideHandleOnEmpty
+          />
+        )}
+      </FormGroup>
     );
   }
 
   renderFeedback = (player, round) => {
     return (
-      <table className="pt-table  pt-html-table pt-html-table-bordered">
-        <thead>
-          <tr>
-            <th>Your guess</th>
-            <th>Actual correlation</th>
-            <th>Score increment</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td align="center">
-              {player.round.get("guess") || "No guess given"}
-            </td>
-            <td>{round.get("task").correctAnswer}</td>
-            <td>
-              <strong style={{ color: player.round.get("scoreColor") }}>
-                +{player.round.get("score")}
-              </strong>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div>
+        <HTMLTable className="pt-table  pt-html-table pt-html-table-bordered">
+          <thead>
+            <tr>
+              <th>Your guess</th>
+              <th>Actual correlation</th>
+              <th>Score increment</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td align="center">
+                {player.round.get("guess") || "No guess given"}
+              </td>
+              <td>{round.get("task").correctAnswer}</td>
+              <td>
+                <strong style={{ color: player.round.get("scoreColor") }}>
+                  +{player.round.get("score")}
+                </strong>
+              </td>
+            </tr>
+          </tbody>
+        </HTMLTable>
+      </div>
     );
   };
 
@@ -93,20 +114,20 @@ export default class TaskResponse extends React.Component {
     return (
       <div className="task-response">
         <form onSubmit={this.handleSubmit}>
-          <div className="pt-form-group">
+          <FormGroup>
             {!isOutcome ? this.renderCurrentGuess(player) : null}
-            {this.renderSlider(player, isOutcome)}
-          </div>
+            {this.renderSlider(player, round, isOutcome)}
+          </FormGroup>
 
           {isOutcome && feedbackTime
             ? this.renderFeedback(player, round)
             : null}
 
-          <div className="pt-form-group">
-            <button type="submit" className="pt-button pt-icon-tick pt-large">
+          <FormGroup>
+            <Button type="submit" icon={"tick"} large={true} fill={true}>
               {isOutcome ? "Next" : "Submit"}
-            </button>
-          </div>
+            </Button>
+          </FormGroup>
         </form>
       </div>
     );
