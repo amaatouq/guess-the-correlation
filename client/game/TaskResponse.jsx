@@ -125,8 +125,9 @@ export default class TaskResponse extends React.Component {
             {this.renderSlider(player, round, isOutcome)}
           </FormGroup>
 
-          
-          {isOutcome ? this.renderFeedback(player, round) : null}
+          {isOutcome && feedbackTime
+            ? this.renderFeedback(player, round)
+            : null}
 
           <FormGroup>
             <Button type="submit" icon={"tick"} large={true} fill={true}>

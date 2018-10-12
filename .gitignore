@@ -6,5 +6,5 @@ prod.json
 staging.json
 development.json
 dev.json
-local.json
 **/.idea
+.DS_Store

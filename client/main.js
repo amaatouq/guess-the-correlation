@@ -4,8 +4,10 @@ import Empirica from "meteor/empirica:core";
 
 import Round from "./game/Round";
 import Consent from "./intro/Consent";
-import InstructionStepOne from "./intro/InstructionStepOne";
-import InstructionStepTwo from "./intro/InstructionStepTwo";
+import Overview from "./intro/Overview";
+import MoreAboutCorrelations from "./intro/MoreAboutCorrelations";
+import RoundOverview from "./intro/RoundOverview";
+
 import Quiz from "./intro/Quiz";
 import ExitSurvey from "./exit/ExitSurvey";
 import Thanks from "./exit/Thanks";
@@ -18,10 +20,12 @@ Empirica.consent(Consent);
 // At this point they have been assigned a treatment. You can return
 // different instruction steps depending on the assigned treatment.
 Empirica.introSteps(treatment => {
-  const steps = [InstructionStepOne];
+  const steps = [Overview, RoundOverview];
+
   if (treatment.playerCount > 1) {
-    steps.push(InstructionStepTwo);
+    steps.push(MoreAboutCorrelations);
   }
+  steps.push(MoreAboutCorrelations);
   steps.push(Quiz);
   return steps;
 });

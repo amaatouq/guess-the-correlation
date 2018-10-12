@@ -23,7 +23,7 @@ Empirica.gameInit((game, treatment, players) => {
     //we set the round with the task data for that round
     //TODO: fixing this
     round.set("task", tasks[i]);
-    
+
     console.log("pulled task data", round.get("task"));
 
     //always add the "response stage" which is the independent guess one
