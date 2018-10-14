@@ -1,6 +1,54 @@
-treatments: []
+treatments:
+  - name: solo_no_feedback
+    factorIds:
+      - E6cggD8fz5jhByf2L
+      - Wv2wPhBxBiNGaWGYx
+      - i3xz4PtLBr9AvxDhW
+      - HMrGK5umqHabjNmft
+      - Zv325QwjK3nDRz6rg
+      - 2ahYAm2GsNQ638yqK
+      - ufBERGYXpH9dk5yfb
+      - RW8SJwC9pR5Jcu594
+      - YgnxEK9Y3oZB9Easr
+      - mGAuQyeAyaWzXYR34
+  - name: solo_feedback
+    factorIds:
+      - E6cggD8fz5jhByf2L
+      - Wv2wPhBxBiNGaWGYx
+      - i3xz4PtLBr9AvxDhW
+      - HMrGK5umqHabjNmft
+      - Zv325QwjK3nDRz6rg
+      - 2ahYAm2GsNQ638yqK
+      - QqJSKyonD4E6C98Nk
+      - RW8SJwC9pR5Jcu594
+      - YgnxEK9Y3oZB9Easr
+      - mGAuQyeAyaWzXYR34
+  - name: lage_dynamic_network
+    factorIds:
+      - B3CzZL2Ybp4wgNr8T
+      - DjSR6C7qiJuN2XNqn
+      - i3xz4PtLBr9AvxDhW
+      - v6Ckv9hgjuNHFK8qB
+      - Zv325QwjK3nDRz6rg
+      - mvWbW3opYHBX7Rt8Z
+      - QqJSKyonD4E6C98Nk
+      - RW8SJwC9pR5Jcu594
+      - YgnxEK9Y3oZB9Easr
+      - xvunDTcpfFypFbH6v
+  - name: small_dynamic_full
+    factorIds:
+      - wcY5yucqhQB5pTaM5
+      - Wv2wPhBxBiNGaWGYx
+      - i3xz4PtLBr9AvxDhW
+      - v6Ckv9hgjuNHFK8qB
+      - Zv325QwjK3nDRz6rg
+      - mvWbW3opYHBX7Rt8Z
+      - ufBERGYXpH9dk5yfb
+      - RW8SJwC9pR5Jcu594
+      - jLoxYKT55x2PRJPt8
+      - xvunDTcpfFypFbH6v
 factorTypes:
-  - _id: fth7dyokCkWyoLiNm
+  - _id: 9hKinfCHfu9ZapCWb
     name: playerCount
     description: The Number of players participating in the given game.
     required: true
@@ -66,34 +114,34 @@ factorTypes:
     min: 1
     max: 20
 factors:
+  - _id: DjSR6C7qiJuN2XNqn
+    name: 'true'
+    value: true
+    factorTypeId: dFhxCZx3LgZCMHh4h
+  - _id: Wv2wPhBxBiNGaWGYx
+    name: 'false'
+    value: false
+    factorTypeId: dFhxCZx3LgZCMHh4h
+  - _id: mvWbW3opYHBX7Rt8Z
+    name: 'true'
+    value: true
+    factorTypeId: dchzzbeA77Gwgstbs
+  - _id: 2ahYAm2GsNQ638yqK
+    name: 'false'
+    value: false
+    factorTypeId: dchzzbeA77Gwgstbs
   - _id: ytmjNurYozEKwu8XA
     name: dyad
     value: 2
-    factorTypeId: fth7dyokCkWyoLiNm
+    factorTypeId: 9hKinfCHfu9ZapCWb
   - _id: E6cggD8fz5jhByf2L
     name: solo
     value: 1
-    factorTypeId: fth7dyokCkWyoLiNm
+    factorTypeId: 9hKinfCHfu9ZapCWb
   - _id: wcY5yucqhQB5pTaM5
     name: small_group
     value: 3
-    factorTypeId: fth7dyokCkWyoLiNm
-  - _id: dfRwPizm9AMhsyPLp
-    name: 'true'
-    value: true
-    factorTypeId: dFhxCZx3LgZCMHh4h
-  - _id: v8e63WfCPCZMHBEjJ
-    name: 'false'
-    value: false
-    factorTypeId: dFhxCZx3LgZCMHh4h
-  - _id: xTcNKMCcvGFKkLeSy
-    name: 'true'
-    value: true
-    factorTypeId: dchzzbeA77Gwgstbs
-  - _id: ecqHBQ7SNq2LoWikW
-    name: 'false'
-    value: false
-    factorTypeId: dchzzbeA77Gwgstbs
+    factorTypeId: 9hKinfCHfu9ZapCWb
   - _id: i3xz4PtLBr9AvxDhW
     name: no_bots
     value: 0
@@ -146,6 +194,18 @@ factors:
     name: full
     value: 20
     factorTypeId: SWSRQ5kd3n7zKeiSr
+  - _id: v6Ckv9hgjuNHFK8qB
+    name: few
+    value: 3
+    factorTypeId: 8MaNru3vYLeFuHKGg
+  - _id: q2uJF2rNWgs8tzrMc
+    name: many
+    value: 8
+    factorTypeId: 8MaNru3vYLeFuHKGg
+  - _id: B3CzZL2Ybp4wgNr8T
+    name: large_group
+    value: 12
+    factorTypeId: 9hKinfCHfu9ZapCWb
 lobbyConfigs:
   - name: default
     timeoutType: lobby
