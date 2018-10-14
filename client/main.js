@@ -6,12 +6,14 @@ import Round from "./game/Round";
 import Consent from "./intro/Consent";
 import Overview from "./intro/Overview";
 import MoreAboutCorrelations from "./intro/MoreAboutCorrelations";
-import RoundOverview from "./intro/RoundOverview";
+import YourGuessStage from "./intro/YourGuessStage";
 
 import Quiz from "./intro/Quiz";
 import ExitSurvey from "./exit/ExitSurvey";
 import Thanks from "./exit/Thanks";
 import Sorry from "./exit/Sorry";
+import InteractiveGuessStage from "./intro/InteractiveGuessStage";
+import OutcomeStage from "./intro/OutcomeStage";
 
 // Set the Consent Component you want to present players (optional).
 Empirica.consent(Consent);
@@ -20,11 +22,13 @@ Empirica.consent(Consent);
 // At this point they have been assigned a treatment. You can return
 // different instruction steps depending on the assigned treatment.
 Empirica.introSteps(treatment => {
-  const steps = [Overview, RoundOverview];
+  const steps = [Overview, YourGuessStage];
 
   if (treatment.playerCount > 1) {
-    steps.push(MoreAboutCorrelations);
+    steps.push(InteractiveGuessStage);
   }
+  steps.push(InteractiveGuessStage);
+  steps.push(OutcomeStage);
   steps.push(MoreAboutCorrelations);
   steps.push(Quiz);
   return steps;

@@ -4,19 +4,16 @@ import { Centered } from "meteor/empirica:core";
 import { Button, ButtonGroup, FormGroup, Label } from "@blueprintjs/core";
 import Slider from "meteor/empirica:slider";
 
-export default class RoundOverview extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { value: 0 };
-  }
-
+export default class YourGuessStage extends React.Component {
   handleChange = num => {
+    const { player } = this.props;
+
     const value = Math.round(num * 100) / 100;
-    this.setState({ value: value });
+    player.set("instructionsGuess", value);
   };
 
   render() {
-    const { hasPrev, hasNext, onNext, onPrev, game } = this.props;
+    const { hasPrev, hasNext, onNext, onPrev, game, player } = this.props;
 
     //every game will have at least 1 stage
     let nStages = 1;
@@ -32,6 +29,8 @@ export default class RoundOverview extends React.Component {
     ) {
       nStages += 1;
     }
+
+    const guess = player.get("instructionsGuess");
 
     return (
       <Centered>
@@ -52,10 +51,11 @@ export default class RoundOverview extends React.Component {
             correlation like the one shown below. You will be able to use the
             slider to pick a value, and then click <strong>Submit</strong> when
             you are ready. You can take maximum{" "}
-            <strong>{game.treatment.stageDuration}</strong> seconds to submit.
+            <strong>{game.treatment.stageDuration}</strong> seconds to submit
+            your answer.
           </p>
 
-          <div className="task" align="center">
+          <div className="task">
             <div className="task-stimulus">
               <img src="/instructions/task.png" className="task-image" />
             </div>
@@ -64,7 +64,7 @@ export default class RoundOverview extends React.Component {
               <form onSubmit={() => {}}>
                 <FormGroup>
                   <Label>
-                    Your current guess of the correlation is: {this.state.value}
+                    Your current guess of the correlation is: {guess}
                   </Label>
 
                   <Slider
@@ -73,7 +73,7 @@ export default class RoundOverview extends React.Component {
                     stepSize={0.01}
                     labelStepSize={0.25}
                     onChange={this.handleChange}
-                    value={this.state.value}
+                    value={guess}
                     hideHandleOnEmpty
                   />
                 </FormGroup>
