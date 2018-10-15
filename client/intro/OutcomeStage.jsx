@@ -28,41 +28,60 @@ export default class OutcomeStage extends React.Component {
     const { game, player } = this.props;
 
     let fakePlayers = {};
+
+    //adding the current real player
+    player.set(
+      "instructionsCumulativeScore",
+      Math.round(
+        Math.round(
+          (1 - Math.abs(0.89 - player.get("instructionsGuess"))) * 100
+        ) +
+          Math.random() * 100
+      )
+    );
+    player.set(
+      "instructionsScore",
+      Math.round((1 - Math.abs(0.89 - player.get("instructionsGuess"))) * 100)
+    );
+
+    fakePlayers[player._id] = {
+      _id: player._id,
+      avatar: `/avatars/jdenticon/${player._id}`,
+      cumulativeScore: player.get("instructionsCumulativeScore"),
+      score: player.get("instructionsScore"),
+      scoreColor: null
+    };
+
+    //adding fake players
     for (let i = 0; i < game.treatment.playerCount; i++) {
-      const score = Math.round(Math.random() * 10);
+      const score = Math.round(Math.random() * 100);
       fakePlayers[i] = {
         _id: i,
         avatar: `/avatars/jdenticon/${avatarNames[i]}`,
-        cumulativeScore: Math.round(score + Math.random() * 10),
+        cumulativeScore: Math.round(score + Math.random() * 100),
         score: score,
-        scoreColor: "red"
+        scoreColor: null
       };
     }
 
-    this.state = { fakePlayers: fakePlayers };
+    this.state = {
+      fakePlayers: fakePlayers,
+      feedbackTime: game.treatment.feedbackRate > 0,
+      feedbackRate: game.treatment.feedbackRate,
+      rewiring: game.treatment.rewiring,
+      social: game.treatment.playerCount === 0
+    };
 
-    const alterIds = _.sample(fakePlayers, game.treatment.altersCount + 1);
-    player.set("instructionsAlterIds", _.pluck(alterIds, "_id"));
+    const alterIds = _.sample(
+      _.without(_.pluck(fakePlayers, "_id"), player._id),
+      game.treatment.altersCount
+    );
+
+    player.set("instructionsAlterIds", alterIds);
   }
 
-  componentDidUpdate() {
-    //check if we want to update or not .. most of the times, we don't want to
-    if (Math.random() > 0.9) {
-      for (const [_id, fakePlayer] of Object.entries(this.state.fakePlayers)) {
-        //not everyone updates
-        if (Math.random() > 0.5) {
-          let change = Math.random() / 10.0;
-          change *= Math.random() * 2 === 1 ? 1 : -1; //make the change + or -
-          if (fakePlayer.initialGuess + change > 0.99) {
-            fakePlayer.initialGuess -= 10 * change;
-          } else if (fakePlayer.initialGuess + change < 0) {
-            fakePlayer.initialGuess -= 10 * change;
-          } else {
-            fakePlayer.initialGuess += change;
-          }
-        }
-      }
-    }
+  componentDidMount() {
+    this.colorScores(this.state.fakePlayers);
   }
 
   renderAltersList(alterIds) {
@@ -134,8 +153,8 @@ export default class OutcomeStage extends React.Component {
   }
 
   renderLeftColumn(player, alterIds) {
-    const cumulativeScore = player.get("InstructionsCumulativeScore") || 0;
-    const roundScore = player.get("InstructionsScore") || 0;
+    const cumulativeScore = player.get("instructionsCumulativeScore") || 0;
+    const roundScore = player.get("instructionsScore") || 0;
 
     const feedbackTime = true;
 
@@ -151,7 +170,7 @@ export default class OutcomeStage extends React.Component {
           <p style={{ textIndent: "1em" }}>
             <Icon icon={"dollar"} />
             <span>{cumulativeScore}</span>
-            <span style={{ color: player.get("InstructionsScoreColor") }}>
+            <span style={{ color: player.get("instructionsScoreColor") }}>
               <strong>
                 {" "}
                 (+
@@ -234,10 +253,12 @@ export default class OutcomeStage extends React.Component {
 
     const rewiring = game.treatment.rewiring;
 
-    //get the ids of the followers and the people that they could follow
     const allPlayersIds = _.pluck(this.state.fakePlayers, "_id");
     const alterIds = player.get("instructionsAlterIds");
-    const nonAlterIds = _.difference(allPlayersIds, alterIds);
+    const nonAlterIds = _.without(
+      _.difference(allPlayersIds, alterIds),
+      player._id
+    );
 
     //actual Player objects and not only Ids for alters and nonAlters
 
@@ -252,7 +273,6 @@ export default class OutcomeStage extends React.Component {
 
     console.log("alters", alters);
 
-    const feedbackTime = true;
     return (
       <Centered>
         <div className="round bp3-ui-text">
@@ -263,24 +283,37 @@ export default class OutcomeStage extends React.Component {
               You will play <strong>{game.treatment.nRounds} rounds</strong>{" "}
               total
               {nStages > 1
-                ? "and each round will consist of " + nStages + " stages."
+                ? " and each round will consist of " + nStages + " stages."
                 : "."}
             </p>
 
-            <h3 className="bp3-heading">3. Outcome</h3>
+            <h3 className="bp3-heading">3. The Outcome Stage</h3>
 
             <p>
-              in the <strong>Round Outcome</strong> stage, you will your final
-              guess vs. the actual correlation value, and the score you earned.
-              You will also see the scores of all players, and you can choose
+              in the <strong>Outcome</strong> stage, you will see your{" "}
+              <strong>
+                final guess (in this case it is{" "}
+                {player.get("instructionsGuess")})
+              </strong>{" "}
+              vs. the actual correlation value{" "}
+              <strong>(in this case 0.89)</strong>, and the score you have{" "}
+              <strong>
+                accumulated so far from previous rounds (e.g., total of{" "}
+                {player.get("instructionsCumulativeScore")})
+              </strong>{" "}
+              and the additional score you have earned from this{" "}
+              <strong style={{ color: player.get("instructionsScoreColor") }}>
+                particular round (e.g., {player.get("instructionsScore")} )
+              </strong>
+              . You will also see the scores of all players, and you can choose
               who you want to follow in the next round. Use the unfollow and
-              follow buttons to
+              follow buttons to{" "}
               <strong>
                 choose a maximum of {game.treatment.altersCount} players
               </strong>
               . You can take maximum{" "}
-              <strong>{game.treatment.stageDuration}</strong> seconds to submit
-              your answer.
+              <strong>{game.treatment.stageDuration}</strong> seconds to make
+              your decisions.
             </p>
           </div>
 
@@ -321,14 +354,14 @@ export default class OutcomeStage extends React.Component {
                             {player.get("instructionsGuess") ||
                               "No guess given"}
                           </td>
-                          <td>{0.7}</td>
+                          <td>{0.89}</td>
                           <td>
                             <strong
                               style={{
-                                color: player.get("InstructionsScoreColor")
+                                color: player.get("instructionsScoreColor")
                               }}
                             >
-                              +{player.get("InstructionsScore")}
+                              +{player.get("instructionsScore")}
                             </strong>
                           </td>
                         </tr>
@@ -374,5 +407,50 @@ export default class OutcomeStage extends React.Component {
         </div>
       </Centered>
     );
+  }
+
+  // We sort the players based on their score in this round in order to color code
+  // how we display their scores.
+  // The highest 1/3 players are green, the lowest 1/3 are red, and the rest are orange.
+  colorScores(players) {
+    const playersList = Object.values(players);
+    const sortedPlayers = playersList.sort(this.compareScores);
+    const top3rd = Math.floor(playersList.length / 3);
+    const bottom3rd = Math.floor(playersList.length - playersList.length / 3);
+    console.log("sortedPlayers", sortedPlayers);
+    sortedPlayers.forEach((player, i) => {
+      console.log("one player", player);
+      console.log("fake players", this.state.fakePlayers);
+      if (i < top3rd) {
+        this.state.fakePlayers[player._id].scoreColor = "green";
+      } else if (i >= bottom3rd) {
+        this.state.fakePlayers[player._id].scoreColor = "red";
+      } else {
+        this.state.fakePlayers[player._id].scoreColor = "orange";
+      }
+      this.forceUpdate();
+      console.log("player._id", player._id);
+      if (this.props.player._id === player._id) {
+        console.log("I am inside");
+        this.props.player.set(
+          "instructionsScoreColor",
+          this.state.fakePlayers[player._id].scoreColor
+        );
+      }
+    });
+  }
+
+  // Helper function to sort players objects based on their score in the current round.
+  compareScores(firstPlayer, secondPlayer) {
+    const scoreA = firstPlayer.score;
+    const scoreB = secondPlayer.score;
+
+    let comparison = 0;
+    if (scoreA > scoreB) {
+      comparison = -1;
+    } else if (scoreA < scoreB) {
+      comparison = 1;
+    }
+    return comparison;
   }
 }

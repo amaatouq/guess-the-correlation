@@ -11,10 +11,11 @@ export default class MoreAboutCorrelations extends React.Component {
         <div className="instructions">
           <h1 className="bp3-heading"> More about correlations </h1>
           <p>
-            We will only look at positive correlation, so your answer will
-            always be between <strong>0 and 1</strong>. When two variables are
-            not at all related, their correlation is 0. When two variables are
-            perfectly related, their correlation is 1.
+            In this game,{" "}
+            <strong>your correlation guess can range from 0 to 1</strong>, and
+            the closer the points fit to a straight line, the closer the
+            correlation will be to 1. No calculations are necessary, just make
+            your best estimate.
           </p>
 
           <div align="center">
@@ -22,17 +23,19 @@ export default class MoreAboutCorrelations extends React.Component {
           </div>
 
           <p>
-            Many different scatter plots may have the same correlation
-            value. All 4 of the scatter plots below have a correlation of 0.82.
+            Note that{" "}
+            <strong>
+              different scatter plots may have the same correlation value
+            </strong>
+            . Plots can vary in number of points and shape, which can make them
+            easier or harder to guess. For example, both plots in the first row
+            below have a correlation of 0.89, and both plots in the second row a
+            correlation of .55
           </p>
 
           <div align="center">
             <img src="/instructions/same-correlation.png" width="650px" />
           </div>
-          <p>
-            In this HIT, no calculations are necessary, just make your best
-            estimate.{" "}
-          </p>
 
           <ButtonGroup className={"button-group"}>
             <Button
