@@ -31,7 +31,7 @@ export default class TaskResponse extends React.Component {
     const { stage, player } = this.props;
     if (stage.name !== "outcome") {
       const value = Math.round(num * 100) / 100;
-      _.throttle(player.stage.set("guess", value), 100);
+      _.throttle(player.stage.append("guess", value), 100);
     }
   };
 

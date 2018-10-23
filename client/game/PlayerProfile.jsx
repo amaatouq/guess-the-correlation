@@ -14,12 +14,12 @@ export default class PlayerProfile extends React.Component {
             className={`satisfied bp3-tag bp3-round ${
               player.stage.submitted
                 ? "bp3-intent-success"
-                : "bp3-intent-danger"
+                : "bp3-intent-primary"
             }`}
           >
             <span
               className={`bp3-icon-standard ${
-                player.stage.submitted ? "bp3-icon-tick" : "bp3-icon-cross"
+                player.stage.submitted ? "bp3-icon-tick" : "bp3-icon-refresh"
               }`}
             />
           </span>
@@ -42,7 +42,7 @@ export default class PlayerProfile extends React.Component {
   }
 
   render() {
-    const { stage, round } = this.props;
+    const { stage } = this.props;
 
     return (
       <Card className={"player-profile"}>

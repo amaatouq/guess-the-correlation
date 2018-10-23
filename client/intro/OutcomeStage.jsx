@@ -12,6 +12,7 @@ import {
   Label
 } from "@blueprintjs/core";
 import Slider from "meteor/empirica:slider";
+import Timer from "../game/Timer";
 
 const avatarNames = "abcdefghijklmnopqrstuvwxyz".split("");
 
@@ -21,6 +22,23 @@ export default class OutcomeStage extends React.Component {
 
     const value = Math.round(num * 100) / 100;
     player.set("instructionsGuess", value);
+  };
+
+  handleReset = event => {
+    const { game } = this.props;
+
+    event.preventDefault();
+    this.setState({ submitted: false });
+
+    for (const [_id, fakePlayer] of Object.entries(this.state.fakePlayers)) {
+      fakePlayer.submitted = false;
+    }
+    this.setState({ seconds: game.treatment.stageDuration });
+  };
+
+  handleSubmit = event => {
+    event.preventDefault();
+    this.setState({ submitted: true });
   };
 
   constructor(props) {
@@ -69,8 +87,15 @@ export default class OutcomeStage extends React.Component {
       feedbackTime: game.treatment.feedbackRate > 0,
       feedbackRate: game.treatment.feedbackRate,
       rewiring: game.treatment.rewiring,
-      social: game.treatment.playerCount === 0
+      social: game.treatment.playerCount === 0,
+      submitted: false,
+      time: {},
+      seconds: game.treatment.stageDuration
     };
+
+    this.timer = 0;
+    this.startTimer = this.startTimer.bind(this);
+    this.countDown = this.countDown.bind(this);
 
     const alterIds = _.sample(
       _.without(_.pluck(fakePlayers, "_id"), player._id),
@@ -82,6 +107,65 @@ export default class OutcomeStage extends React.Component {
 
   componentDidMount() {
     this.colorScores(this.state.fakePlayers);
+    let timeLeftVar = OutcomeStage.secondsToTime(this.state.seconds);
+    this.setState({ time: timeLeftVar });
+    this.startTimer();
+  }
+
+  static secondsToTime(secs) {
+    let hours = Math.floor(secs / (60 * 60));
+
+    let divisor_for_minutes = secs % (60 * 60);
+    let minutes = Math.floor(divisor_for_minutes / 60);
+
+    let divisor_for_seconds = divisor_for_minutes % 60;
+    let seconds = Math.ceil(divisor_for_seconds);
+
+    let obj = {
+      h: hours,
+      m: minutes,
+      s: seconds
+    };
+    return obj;
+  }
+
+  startTimer() {
+    if (this.timer === 0 && this.state.seconds > 0) {
+      this.timer = setInterval(this.countDown, 1000);
+    }
+  }
+
+  countDown() {
+    let seconds = this.state.seconds - 1;
+
+    if (!this.state.submitted) {
+      // Remove one second, set state so a re-render happens.
+      this.setState({
+        time: OutcomeStage.secondsToTime(seconds),
+        seconds: seconds
+      });
+    }
+
+    // Check if we're at zero.
+    if (seconds === 0) {
+      this.setState({ submitted: true });
+    }
+  }
+
+  static renderTimer(remainingSeconds) {
+    const classes = ["timer"];
+    if (remainingSeconds <= 5) {
+      classes.push("lessThan5");
+    } else if (remainingSeconds <= 10) {
+      classes.push("lessThan10");
+    }
+
+    return (
+      <div className={classes.join(" ")}>
+        <h4 className="bp3-heading">Timer</h4>
+        <span className="seconds">{remainingSeconds}</span>
+      </div>
+    );
   }
 
   renderAltersList(alterIds) {
@@ -118,6 +202,7 @@ export default class OutcomeStage extends React.Component {
         fill={true}
         intent={"primary"}
         onClick={this.handleUnfollow.bind(this, alterId)}
+        disabled={this.state.submitted}
       >
         Unfollow
       </Button>
@@ -159,7 +244,7 @@ export default class OutcomeStage extends React.Component {
     const feedbackTime = true;
 
     return (
-      <div className="right" key="left">
+      <div className="right" key="right" style={{ "min-width": "18rem" }}>
         {feedbackTime ? (
           <p>
             <strong>Score:</strong> Total (+increment)
@@ -199,6 +284,7 @@ export default class OutcomeStage extends React.Component {
           minimal={true}
           icon={"add"}
           onClick={this.handleFollow.bind(this, otherPlayer._id)}
+          disabled={this.state.submitted}
         />
         <img src={otherPlayer.avatar} className="profile-avatar" />
         {feedbackTime ? <Icon icon={"dollar"} /> : null}
@@ -233,6 +319,7 @@ export default class OutcomeStage extends React.Component {
 
   render() {
     const { hasPrev, hasNext, onNext, onPrev, game, player } = this.props;
+    const remainingSeconds = this.state.time.s;
 
     //every game will have at least 1 stage
     let nStages = 1;
@@ -267,11 +354,8 @@ export default class OutcomeStage extends React.Component {
       this.state.fakePlayers,
       p => p.cumulativeScore
     ).reverse();
-    console.log(allPlayers);
     const alters = allPlayers.filter(p => alterIds.includes(p._id));
     const nonAlters = allPlayers.filter(p => nonAlterIds.includes(p._id));
-
-    console.log("alters", alters);
 
     return (
       <Centered>
@@ -287,7 +371,7 @@ export default class OutcomeStage extends React.Component {
                 : "."}
             </p>
 
-            <h3 className="bp3-heading">3. The Outcome Stage</h3>
+            <h3 className="bp3-heading">{nStages}. The Outcome Stage</h3>
 
             <p>
               in the <strong>Outcome</strong> stage, you will see your{" "}
@@ -317,68 +401,138 @@ export default class OutcomeStage extends React.Component {
             </p>
           </div>
 
-          <div className="content">
-            <div className="task">
-              <div className="task-stimulus">
-                <img src="/instructions/task.png" className="task-image" />
-              </div>
+          <div className="round">
+            <div className="content">
+              {/*Here is the playerProfile*/}
+              <Card className={"player-profile"} style={{ width: "15rem" }}>
+                <aside>
+                  <div className="profile-score">
+                    <h3 className="bp3-heading">Your Profile</h3>
+                    <span className="image" style={{ width: "3rem" }}>
+                      <span
+                        className={`satisfied bp3-tag bp3-round ${
+                          this.state.submitted
+                            ? "bp3-intent-success"
+                            : "bp3-intent-primary"
+                        }`}
+                      >
+                        <span
+                          className={`bp3-icon-standard ${
+                            this.state.submitted
+                              ? "bp3-icon-tick"
+                              : "bp3-icon-refresh"
+                          }`}
+                        />
+                      </span>
 
-              <div className="task-response">
-                <form onSubmit={() => {}}>
-                  <FormGroup>
-                    <Label>Your guess of the correlation is: {guess}</Label>
-
-                    <Slider
-                      min={0}
-                      max={1}
-                      stepSize={0.01}
-                      labelStepSize={0.25}
-                      onChange={this.handleChange}
-                      value={guess}
-                      hideHandleOnEmpty
-                      disabled
-                    />
-                  </FormGroup>
-                  <div>
-                    <HTMLTable>
-                      <thead>
-                        <tr>
-                          <th>Your guess</th>
-                          <th>Actual correlation</th>
-                          <th>Score increment</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td align="center">
-                            {player.get("instructionsGuess") ||
-                              "No guess given"}
-                          </td>
-                          <td>{0.89}</td>
-                          <td>
-                            <strong
-                              style={{
-                                color: player.get("instructionsScoreColor")
-                              }}
-                            >
-                              +{player.get("instructionsScore")}
-                            </strong>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </HTMLTable>
+                      <img
+                        className="profile-avatar"
+                        src={`/avatars/jdenticon/${player._id}`}
+                      />
+                    </span>
                   </div>
-                </form>
-              </div>
-            </div>
+                  {/*We always show individual level feedback*/}
+                  <div className="profile-score">
+                    <h4 className="bp3-heading">Total score</h4>
+                    <Icon icon="dollar" iconSize={20} title={"dollar-sign"} />
+                    <span>{0}</span>
+                  </div>
+                  {OutcomeStage.renderTimer(remainingSeconds)}
+                </aside>
+              </Card>
 
-            <div className="social-interaction revert">
-              {rewiring
-                ? [
-                    this.renderLeftColumn(player, alters),
-                    this.renderRightColumn(nonAlters)
-                  ]
-                : this.renderLeftColumn(player, alters)}
+              <div className="task">
+                <div className="task-stimulus">
+                  <img src="/instructions/task.png" className="task-image" />
+                </div>
+
+                <div className="task-response">
+                  <form onSubmit={this.handleSubmit}>
+                    <FormGroup>
+                      <Label>Your guess of the correlation is: {guess}</Label>
+
+                      <Slider
+                        min={0}
+                        max={1}
+                        stepSize={0.01}
+                        labelStepSize={0.25}
+                        onChange={this.handleChange}
+                        value={guess}
+                        hideHandleOnEmpty
+                        disabled
+                      />
+                    </FormGroup>
+                    <div>
+                      <HTMLTable>
+                        <thead>
+                          <tr>
+                            <th>Your guess</th>
+                            <th>Actual correlation</th>
+                            <th>Score increment</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td align="center">
+                              {player.get("instructionsGuess") ||
+                                "No guess given"}
+                            </td>
+                            <td>{0.89}</td>
+                            <td>
+                              <strong
+                                style={{
+                                  color: player.get("instructionsScoreColor")
+                                }}
+                              >
+                                +{player.get("instructionsScore")}
+                              </strong>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </HTMLTable>
+                    </div>
+                    {this.state.submitted ? (
+                      <FormGroup>
+                        <Button
+                          icon={"refresh"}
+                          minimal={true}
+                          intent={"primary"}
+                          large={true}
+                          fill={true}
+                          onClick={this.handleReset}
+                        >
+                          <span>
+                            try again (will not be available in the game)
+                          </span>
+                        </Button>
+                      </FormGroup>
+                    ) : (
+                      <FormGroup>
+                        <Button
+                          type="submit"
+                          icon={"tick"}
+                          large={true}
+                          fill={true}
+                        >
+                          Submit
+                        </Button>
+                      </FormGroup>
+                    )}
+                  </form>
+                </div>
+              </div>
+
+              <div
+                className="social-interaction revert"
+                style={{ width: "11rem" }}
+              >
+                {rewiring
+                  ? [
+                      this.renderLeftColumn(player, alters),
+                      this.renderRightColumn(nonAlters)
+                    ]
+                  : this.renderLeftColumn(player, alters)}
+              </div>
             </div>
           </div>
 
@@ -417,10 +571,7 @@ export default class OutcomeStage extends React.Component {
     const sortedPlayers = playersList.sort(this.compareScores);
     const top3rd = Math.floor(playersList.length / 3);
     const bottom3rd = Math.floor(playersList.length - playersList.length / 3);
-    console.log("sortedPlayers", sortedPlayers);
     sortedPlayers.forEach((player, i) => {
-      console.log("one player", player);
-      console.log("fake players", this.state.fakePlayers);
       if (i < top3rd) {
         this.state.fakePlayers[player._id].scoreColor = "green";
       } else if (i >= bottom3rd) {
@@ -429,9 +580,7 @@ export default class OutcomeStage extends React.Component {
         this.state.fakePlayers[player._id].scoreColor = "orange";
       }
       this.forceUpdate();
-      console.log("player._id", player._id);
       if (this.props.player._id === player._id) {
-        console.log("I am inside");
         this.props.player.set(
           "instructionsScoreColor",
           this.state.fakePlayers[player._id].scoreColor

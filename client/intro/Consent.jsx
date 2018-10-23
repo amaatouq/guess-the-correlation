@@ -7,8 +7,8 @@ export default class Consent extends React.Component {
     return (
       <Centered>
         <div className="consent">
-          <h1> Consent Form </h1>
-          <p>
+          <h1 className="bp3-heading"> Consent Form </h1>
+          <p className="bp3-ui-text">
             This experiment is part of a MIT scientific project. Your decision
             to participate in this experiment is entirely voluntary. There are
             no known or anticipated risks to participating in this experiment.

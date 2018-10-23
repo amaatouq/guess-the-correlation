@@ -17,8 +17,17 @@ export default class Overview extends React.Component {
           </p>
           <p>
             The game consists of{" "}
-            <strong>{game.treatment.nRounds} rounds</strong>. At each round you
-            will see a scatter plot and be asked to{" "}
+            <strong>{game.treatment.nRounds} rounds</strong>{" "}
+            {game.treatment.playerCount > 1 ? (
+              <span>
+                and you will play simultaneously{" "}
+                <strong>
+                  {" "}
+                  with {game.treatment.playerCount} other MTurk workers
+                </strong>
+              </span>
+            ) : null}
+            . At each round you will see a scatter plot and be asked to{" "}
             <strong>estimate the correlation of the X and Y variables</strong>.
           </p>
           <div align="center">

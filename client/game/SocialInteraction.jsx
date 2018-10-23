@@ -80,7 +80,7 @@ export default class SocialInteraction extends React.Component {
     const roundScore = player.round.get("score") || 0;
 
     return (
-      <div className="right" key="left">
+      <div className="right" key="left" style={{ "min-width": "18rem" }}>
         {feedbackTime ? (
           <p className="bp3-ui-text">
             <strong>Score:</strong> Total (+increment)

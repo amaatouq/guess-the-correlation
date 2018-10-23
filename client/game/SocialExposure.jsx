@@ -13,12 +13,12 @@ export default class SocialExposure extends React.Component {
             className={`satisfied bp3-tag bp3-round ${
               otherPlayer.stage.submitted
                 ? "bp3-intent-success"
-                : "bp3-intent-danger"
+                : "bp3-intent-primary"
             }`}
           >
             <span
               className={`bp3-icon-standard ${
-                otherPlayer.stage.submitted ? "bp3-icon-tick" : "bp3-icon-cross"
+                otherPlayer.stage.submitted ? "bp3-icon-tick" : "bp3-icon-refresh"
               }`}
             />
           </span>
