@@ -62,16 +62,44 @@
 .player-profile {
   display: flex;
   flex-direction: column;
-  width: 15rem;
+  width: 19rem;
   // background-color: #f5f5f5;
   min-height: 100%;
   align-items: center;
-  padding: 4rem;
+  padding: 3rem;
+
+  .image {
+    position: relative;
+    .satisfied {
+      // font-size: 0.1rem;
+      position: absolute;
+      top: -5.5rem;
+      right: -1rem;
+      .bp3-icon-standard {
+        font-size: 1.2rem;
+      }
+    }
+  }
+
+  &:first-child {
+    .name {
+      padding-right: 1rem;
+      white-space: nowrap;
+    }
+    .image {
+      padding-right: 2rem;
+      //border-right: 1px solid lightgrey;
+
+      .satisfied {
+        right: 1.2rem;
+      }
+    }
+  }
 
   .profile-avatar {
     width: 8rem;
     height: 8rem;
-    margin: 3rem 0;
+    margin-top: 2rem;
   }
 
   .profile-score {
@@ -96,7 +124,6 @@
     display: flex;
     align-items: flex-start;
   }
-
 }
 
 .instructions-text {
@@ -116,6 +143,34 @@
     grid-gap: 3rem;
     grid-template-areas: "img range";
     padding-right: 3rem;
+
+    .image {
+      position: relative;
+      .satisfied {
+        // font-size: 0.1rem;
+        position: absolute;
+        top: -0.6rem;
+        right: -0.8rem;
+        .bp3-icon-standard {
+          font-size: 1.2rem;
+        }
+      }
+    }
+
+    &:first-child {
+      .name {
+        padding-right: 2rem;
+        white-space: nowrap;
+      }
+      .image {
+        padding-right: 2rem;
+        border-right: 1px solid lightgrey;
+
+        .satisfied {
+          right: 1.2rem;
+        }
+      }
+    }
 
     img {
       grid-area: img;
@@ -210,13 +265,13 @@
   .alter {
     .info {
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
       margin-bottom: 1rem;
       img {
         grid-area: img;
-        width: 4rem;
-        height: 4rem;
+        width: 5rem;
+        height: 5rem;
       }
     }
 
@@ -229,19 +284,19 @@
     margin-left: 2rem;
     .non-alter {
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
       margin-bottom: 1rem;
 
       img {
         grid-area: img;
-        width: 2rem;
-        height: 2rem;
+        width: 3.5rem;
+        height: 3.5rem;
       }
     }
   }
 }
 
-.revert{
+.revert {
   all: revert;
 }

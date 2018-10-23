@@ -5,7 +5,23 @@ import SocialExposure from "./SocialExposure";
 import SocialInteraction from "./SocialInteraction.jsx";
 import Task from "./Task";
 
+const roundSound = new Audio("sounds/round-sound.mp3");
+const gameSound = new Audio("sounds/bell.mp3");
+
+
 export default class Round extends React.Component {
+  
+  componentDidMount() {
+    const { game } = this.props;
+    if (game.get("justStarted")) {
+      //play the bell sound only once when the game starts
+      gameSound.play();
+      game.set("justStarted", false);
+    } else {
+      roundSound.play();
+    }
+  }
+  
     render() {
         const { round, stage, player, game } = this.props;
         const social = game.treatment.altersCount > 0;

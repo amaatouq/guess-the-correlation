@@ -1,19 +1,68 @@
 import Empirica from "meteor/empirica:core";
 import { difficulties } from "./constants";
 
-// onGameStart is triggered opnce per game before the game starts, and before
+//this only works if we have 12 participants
+const initial_network = {
+  0: [2, 4, 9],
+  1: [4, 8, 2],
+  2: [4, 10, 3],
+  3: [6, 10, 0],
+  4: [0, 6, 8],
+  5: [6, 9, 11],
+  6: [5, 11, 10],
+  7: [1, 5, 0],
+  8: [3, 1, 7],
+  9: [7, 2, 5],
+  10: [1, 3, 11],
+  11: [9, 7, 8]
+};
+
+function getAlters(player, playerIndex, playerIds, alterCount) {
+  //using the initial network structure to create the network, otherwise, a random network
+
+  let alterIds = [];
+  if (playerIds.length === 12) {
+    alterIds = playerIds.filter(
+      (elt, i) => initial_network[playerIndex].indexOf(i) > -1
+    );
+    console.log(
+      "player ",
+      playerIndex,
+      "got: ",
+      initial_network[playerIndex],
+      "actual alters: ",
+      alterIds
+    );
+  } else {
+    alterIds = _.sample(_.without(playerIds, player._id), alterCount);
+  }
+
+  return alterIds;
+}
+
+function getAvatar(player, i) {
+  return i > 16 ? `/avatars/jdenticon/${player._id}` : `/avatars/${i}.png`;
+}
+
+// onGameStart is triggered once per game before the game starts, and before
 // the first onRoundStart. It receives the game and list of all the players in
 // the game.
 Empirica.onGameStart((game, players) => {
+  game.set("justStarted", true); // I use this to play the sound on the UI when the game starts
+
   console.log("game", game._id, "started");
+
   //prepare players by creating the network
   const playerIds = _.pluck(players, "_id");
   players.forEach((player, i) => {
-    const alterIds = _.sample(
-      _.without(playerIds, player._id),
+    const alterIds = getAlters(
+      player,
+      i,
+      playerIds,
       game.treatment.altersCount
     );
-    player.set("avatar", `/avatars/jdenticon/${player._id}`);
+
+    player.set("avatar", getAvatar(player, i));
     //equal number of difficulties .. this can be changed to change the fraction of easy/medium/hard
     player.set("difficulty", difficulties[i % difficulties.length]);
     player.set("alterIds", alterIds);

@@ -21,7 +21,6 @@ Empirica.gameInit((game, treatment, players) => {
     const round = game.addRound();
 
     //we set the round with the task data for that round
-    //TODO: fixing this
     round.set("task", tasks[i]);
 
     console.log("pulled task data", round.get("task"));

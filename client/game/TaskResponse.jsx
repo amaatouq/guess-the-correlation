@@ -10,12 +10,28 @@ import {
 } from "@blueprintjs/core";
 
 export default class TaskResponse extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = { guess: this.props.player.round.get("guess") };
+  }
+
   handleChange = num => {
     const { stage, player } = this.props;
     if (stage.name !== "outcome") {
       const value = Math.round(num * 100) / 100;
-      player.stage.set("guess", value);
-      player.round.set("guess", value);
+      //_.throttle(player.round.set("guess", value),101000);
+      this.setState({ guess: value });
+      throttledGuessUpdate(player, value);
+      //player.round.set("guess", value)
+    }
+  };
+
+  handleRelease = num => {
+    const { stage, player } = this.props;
+    if (stage.name !== "outcome") {
+      const value = Math.round(num * 100) / 100;
+      _.throttle(player.stage.set("guess", value), 100);
     }
   };
 
@@ -41,17 +57,18 @@ export default class TaskResponse extends React.Component {
   renderCurrentGuess = player => {
     return (
       <Label>
-        Your current guess of the correlation is: {player.round.get("guess")}
+        Your current guess of the correlation is: {this.state.guess}
       </Label>
     );
   };
 
   renderSlider(player, round, isOutcome) {
-    const guess = player.round.get("guess");
+    const guess = this.state.guess;
+    const feedbackTime = round.get("displayFeedback");
     const correctAnswer = round.get("task").correctAnswer;
     return (
       <FormGroup>
-        {isOutcome ? (
+        {isOutcome && feedbackTime ? (
           <RangeSlider
             className={"range-slider"}
             disabled={true}
@@ -59,7 +76,11 @@ export default class TaskResponse extends React.Component {
             max={1}
             stepSize={0.01}
             labelStepSize={0.25}
-            value={[guess, correctAnswer].sort()}
+            value={
+              guess
+                ? [guess, correctAnswer].sort()
+                : [correctAnswer, correctAnswer]
+            }
           />
         ) : (
           <Slider
@@ -68,6 +89,7 @@ export default class TaskResponse extends React.Component {
             stepSize={0.01}
             labelStepSize={0.25}
             onChange={this.handleChange}
+            onRelease={this.handleRelease}
             value={guess}
             disabled={isOutcome}
             hideHandleOnEmpty
@@ -139,3 +161,8 @@ export default class TaskResponse extends React.Component {
     );
   }
 }
+
+const throttledGuessUpdate = _.throttle((player, value) => {
+  console.log("insider threttle");
+  player.round.set("guess", value);
+}, 500);

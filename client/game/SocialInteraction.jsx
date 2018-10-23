@@ -8,7 +8,7 @@ export default class SocialInteraction extends React.Component {
     event.preventDefault();
     const { player } = this.props;
     const alterIds = _.without(player.get("alterIds"), alterId);
-    player.set("alterIds", alterIds);
+    throttled(10000, player.set("alterIds", alterIds)); //this will slow down the update
   };
 
   handleFollow = (alterId, event) => {
@@ -24,7 +24,7 @@ export default class SocialInteraction extends React.Component {
     }
 
     alterIds.push(alterId);
-    player.set("alterIds", alterIds);
+    throttled(10000, player.set("alterIds", alterIds)); //this will slow down the update
   };
 
   renderUnfollow(alterId) {
@@ -82,7 +82,7 @@ export default class SocialInteraction extends React.Component {
     return (
       <div className="right" key="left">
         {feedbackTime ? (
-          <p>
+          <p className="bp3-ui-text">
             <strong>Score:</strong> Total (+increment)
           </p>
         ) : null}
@@ -124,9 +124,7 @@ export default class SocialInteraction extends React.Component {
           disabled={player.stage.submitted}
         />
         <img src={otherPlayer.get("avatar")} className="profile-avatar" />
-        {feedbackTime ? (
-         <Icon icon={'dollar'}/>
-        ) : null}
+        {feedbackTime ? <Icon icon={"dollar"} /> : null}
         {feedbackTime ? <span>{cumulativeScore} </span> : null}
         {feedbackTime ? (
           <span style={{ color: otherPlayer.round.get("scoreColor") }}>
@@ -156,13 +154,15 @@ export default class SocialInteraction extends React.Component {
   }
 
   render() {
-    const { game, player, feedbackTime } = this.props;
+    const { game, player, round } = this.props;
+
+    const feedbackTime = round.get("displayFeedback");
 
     const rewiring = game.treatment.rewiring;
 
     //get the ids of the followers and the people that they could follow
     const allPlayersIds = _.pluck(game.players, "_id");
-    const alterIds = player.get("alterIds");
+    const alterIds = Array.from(new Set(player.get("alterIds"))); //this protect us from double clicking that might cause follwoing the same player twice
     const nonAlterIds = _.without(
       _.difference(allPlayersIds, alterIds),
       player._id
@@ -188,4 +188,9 @@ export default class SocialInteraction extends React.Component {
       </div>
     );
   }
+}
+
+// ES6 code to reduce the rat of calling a function
+function throttled(delay, fn) {
+  _.throttle(fn, delay);
 }

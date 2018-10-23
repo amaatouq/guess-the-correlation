@@ -8,11 +8,24 @@ export default class SocialExposure extends React.Component {
     const guess = otherPlayer.round.get("guess");
     return (
       <Card className={"alter"} elevation={Elevation.TWO} key={otherPlayer._id}>
-        <img
-          src={otherPlayer.get("avatar")}
-          className="profile-avatar"
-          title={otherPlayer._id}
-        />
+        <span className="image">
+          <span
+            className={`satisfied bp3-tag bp3-round ${
+              otherPlayer.stage.submitted
+                ? "bp3-intent-success"
+                : "bp3-intent-danger"
+            }`}
+          >
+            <span
+              className={`bp3-icon-standard ${
+                otherPlayer.stage.submitted ? "bp3-icon-tick" : "bp3-icon-cross"
+              }`}
+            />
+          </span>
+
+          <img src={otherPlayer.get("avatar")} />
+        </span>
+
         <Slider
           min={0}
           max={1}
@@ -20,6 +33,7 @@ export default class SocialExposure extends React.Component {
           value={guess}
           showTrackFill={false}
           disabled
+          hideHandleOnEmpty
         />
       </Card>
     );

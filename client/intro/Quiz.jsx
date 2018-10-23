@@ -7,7 +7,9 @@ import {
   Callout,
   Classes,
   FormGroup,
-  Label
+  Label,
+  Radio,
+  RadioGroup
 } from "@blueprintjs/core";
 
 export default class Quiz extends React.Component {
@@ -15,7 +17,8 @@ export default class Quiz extends React.Component {
     super(props);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.state = { value1: "", value2: "", quizMistake: false };
+    this.handleRadioChange = this.handleRadioChange.bind(this);
+    this.state = { nParticipants: "", goal: "", color: "", quizMistake: false };
   }
 
   handleChange = event => {
@@ -23,10 +26,26 @@ export default class Quiz extends React.Component {
     this.setState({ [el.name]: el.value.trim().toLowerCase() });
   };
 
+  handleRadioChange = event => {
+    const el = event.currentTarget;
+    console.log("el", el);
+    console.log("ev", event);
+    this.setState({ [el.name]: el.value });
+  };
+
   handleSubmit = event => {
+    const { game } = this.props;
     event.preventDefault();
 
-    if (this.state.value1 !== "4" || this.state.value2 !== "white") {
+    if (game.treatment.playerCount === 1) {
+      this.setState({ nParticipants: game.treatment.altersCount });
+    }
+
+    if (
+      this.state.nParticipants !== game.treatment.altersCount.toString() ||
+      this.state.goal !== "estimate" ||
+      this.state.color !== "white"
+    ) {
       this.setState({ quizMistake: true });
     } else {
       this.props.onNext();
@@ -34,37 +53,58 @@ export default class Quiz extends React.Component {
   };
 
   render() {
-    const { hasPrev, onPrev } = this.props;
-    const { value1, value2, quizMistake } = this.state;
+    const { hasPrev, onPrev, game } = this.props;
+    const { nParticipants, goal, color, quizMistake } = this.state;
     return (
       <Centered>
         <div className="quiz instructions">
-          <h1> Quiz </h1>
+          <h1 className="bp3-heading"> Quiz </h1>
 
           <form onSubmit={this.handleSubmit}>
-            <FormGroup
-              label={"What is 2+2?"}
-              labelFor={"value1"}
-              helperText={"(enter a number)"}
-            >
-              <div className="pt-form-content">
-                <input
-                  id="example-form-group-input-a"
-                  className={Classes.INPUT}
-                  placeholder="e.g. 3"
-                  type="text"
-                  dir="auto"
-                  name="value1"
-                  value={value1}
-                  onChange={this.handleChange}
-                  required
+            {game.treatment.playerCount > 1 ? (
+              <FormGroup
+                label={"What is the maximum number of people you can follow?"}
+                labelFor={"nParticipants"}
+                helperText={"(enter a number)"}
+              >
+                <div className="pt-form-content">
+                  <input
+                    id="example-form-group-input-a"
+                    className={Classes.INPUT}
+                    placeholder="e.g. 2"
+                    type="text"
+                    dir="auto"
+                    name="nParticipants"
+                    value={nParticipants}
+                    onChange={this.handleChange}
+                    required
+                  />
+                </div>
+              </FormGroup>
+            ) : null}
+
+            <FormGroup>
+              <RadioGroup
+                label="Select the true statement about the goal of the task:"
+                onChange={this.handleRadioChange}
+                selectedValue={goal}
+                name="goal"
+                required
+              >
+                <Radio
+                  label="Estimate the correlation of two variables"
+                  value="estimate"
                 />
-              </div>
+                <Radio
+                  label="Count the nuber of points in a picture."
+                  value="count"
+                />
+              </RadioGroup>
             </FormGroup>
 
             <FormGroup
               label={"What color was Napoleon's white horse?"}
-              labelFor={"value2"}
+              labelFor={"color"}
               helperText={"(enter a color name)"}
             >
               <div className="pt-form-content">
@@ -73,8 +113,8 @@ export default class Quiz extends React.Component {
                   placeholder="e.g. brown"
                   type="text"
                   dir="auto"
-                  name="value2"
-                  value={value2}
+                  name="color"
+                  value={color}
                   onChange={this.handleChange}
                   required
                 />

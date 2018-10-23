@@ -118,10 +118,10 @@ export default class InteractiveGuessStage extends React.Component {
               : "."}
           </p>
 
-          <h3 className="bp3-heading">2. The Interactive Stage</h3>
+          <h3 className="bp3-heading">2. Interactive Response Stage</h3>
 
           <p>
-            in the <strong>Interactive</strong> stage, you will see the guesses
+            in the <strong>Interactive Response</strong> stage, you will see the guesses
             of <strong>{game.treatment.altersCount} other players</strong>. You
             can change your guess by using the slider, and see how other players
             change their guesses in real-time. You can take maximum{" "}
