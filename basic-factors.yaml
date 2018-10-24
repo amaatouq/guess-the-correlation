@@ -1,0 +1,76 @@
+treatments: []
+factorTypes:
+  - _id: QrrhazrFHSJ7NdhaY
+    name: playerCount
+    description: The Number of players participating in the given game.
+    required: true
+    type: Integer
+    min: 1
+  - _id: ra5PM875WMvEnppGS
+    name: botsCount
+    description: The Number of bots that should participate in a given game
+    required: false
+    type: Number
+    min: 0
+    max: 100
+  - _id: 7xNFGv5WCZAXxjZKc
+    name: altersCount
+    description: The Number of connections for each player
+    required: true
+    type: Integer
+    min: 0
+    max: 50
+  - _id: QzogBfgatZr8JuAP3
+    name: stageDuration
+    description: The maximum time in seconds for each stage before moving to the next
+    required: true
+    type: Integer
+    min: 5
+    max: 60
+  - _id: wAD8GzhvbTy4wHimY
+    name: rewiring
+    description: Can the player change their alters on each round
+    required: true
+    type: Boolean
+  - _id: 8gqCENQ45X9KBWhgS
+    name: feedbackRate
+    description: how frequent the feedback is (1 = every round; 0 = never)
+    required: true
+    type: Number
+    min: 0
+    max: 1
+  - _id: QGXdyRSPsEnjDNqNW
+    name: feedbackNoise
+    description: The level of noise added to performance of the alters
+    required: false
+    type: Number
+    min: 0
+    max: 1
+  - _id: nixpWHDsnQ9TeEZrQ
+    name: shockRate
+    description: The rate at which we change difficulties for the players
+    required: true
+    type: Number
+    min: 0
+    max: 1
+  - _id: ivryKtaipqLtfguqP
+    name: nRounds
+    description: This is the number of rounds for the game
+    required: true
+    type: Integer
+    min: 1
+    max: 20
+factors:
+  - _id: PhBDTLNAKQojqZyqW
+    name: 'true'
+    value: true
+    factorTypeId: wAD8GzhvbTy4wHimY
+  - _id: rnpkyrjZNXmDhxPDD
+    name: 'false'
+    value: false
+    factorTypeId: wAD8GzhvbTy4wHimY
+lobbyConfigs:
+  - timeoutType: lobby
+    timeoutInSeconds: 600
+    timeoutStrategy: fail
+    gameLobbyIds: []

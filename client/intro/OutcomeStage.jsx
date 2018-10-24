@@ -9,21 +9,13 @@ import {
   FormGroup,
   HTMLTable,
   Icon,
-  Label
+  Label,
+  RangeSlider
 } from "@blueprintjs/core";
-import Slider from "meteor/empirica:slider";
-import Timer from "../game/Timer";
 
 const avatarNames = "abcdefghijklmnopqrstuvwxyz".split("");
 
 export default class OutcomeStage extends React.Component {
-  handleChange = num => {
-    const { player } = this.props;
-
-    const value = Math.round(num * 100) / 100;
-    player.set("instructionsGuess", value);
-  };
-
   handleReset = event => {
     const { game } = this.props;
 
@@ -47,16 +39,6 @@ export default class OutcomeStage extends React.Component {
 
     let fakePlayers = {};
 
-    //adding the current real player
-    player.set(
-      "instructionsCumulativeScore",
-      Math.round(
-        Math.round(
-          (1 - Math.abs(0.89 - player.get("instructionsGuess"))) * 100
-        ) +
-          Math.random() * 100
-      )
-    );
     player.set(
       "instructionsScore",
       Math.round((1 - Math.abs(0.89 - player.get("instructionsGuess"))) * 100)
@@ -71,7 +53,7 @@ export default class OutcomeStage extends React.Component {
     };
 
     //adding fake players
-    for (let i = 0; i < game.treatment.playerCount; i++) {
+    for (let i = 0; i < game.treatment.playerCount - 1; i++) {
       const score = Math.round(Math.random() * 100);
       fakePlayers[i] = {
         _id: i,
@@ -214,7 +196,7 @@ export default class OutcomeStage extends React.Component {
     const cumulativeScore = otherPlayer.cumulativeScore || 0;
     const roundScore = otherPlayer.score || 0;
 
-    const feedbackTime = true;
+    const feedbackTime = this.state.feedbackTime;
 
     return (
       <Card className={"alter"} elevation={Elevation.TWO} key={otherPlayer._id}>
@@ -241,10 +223,10 @@ export default class OutcomeStage extends React.Component {
     const cumulativeScore = player.get("instructionsCumulativeScore") || 0;
     const roundScore = player.get("instructionsScore") || 0;
 
-    const feedbackTime = true;
+    const feedbackTime = this.state.feedbackTime;
 
     return (
-      <div className="right" key="right" style={{ "min-width": "18rem" }}>
+      <div className="right" key="right" style={{ minWidth: "18rem" }}>
         {feedbackTime ? (
           <p>
             <strong>Score:</strong> Total (+increment)
@@ -276,7 +258,7 @@ export default class OutcomeStage extends React.Component {
   renderNonAlter(otherPlayer) {
     const cumulativeScore = otherPlayer.cumulativeScore || 0;
     const roundScore = otherPlayer.score || 0;
-    const feedbackTime = true;
+    const feedbackTime = this.state.feedbackTime;
     return (
       <div className="non-alter" key={otherPlayer._id}>
         <Button
@@ -308,7 +290,7 @@ export default class OutcomeStage extends React.Component {
 
   renderRightColumn(nonAlterIds) {
     return (
-      <div className="right" key="right">
+      <div className="right" key="right" style={{ minWidth: "12rem" }}>
         <p>
           <strong>You can follow:</strong>
         </p>
@@ -389,15 +371,19 @@ export default class OutcomeStage extends React.Component {
               <strong style={{ color: player.get("instructionsScoreColor") }}>
                 particular round (e.g., {player.get("instructionsScore")} )
               </strong>
-              . You will also see the scores of all players, and you can choose
-              who you want to follow in the next round. Use the unfollow and
-              follow buttons to{" "}
-              <strong>
-                choose a maximum of {game.treatment.altersCount} players
-              </strong>
+              {game.treatment.altersCount > 1 ? (
+                <span>
+                  . You will also see the scores of all players, and you can
+                  choose who you want to follow in the next round. Use the
+                  unfollow and follow buttons to{" "}
+                  <strong>
+                    choose a maximum of {game.treatment.altersCount} players
+                  </strong>
+                </span>
+              ) : null}
               . You can take maximum{" "}
-              <strong>{game.treatment.stageDuration}</strong> seconds to make
-              your decisions.
+              <strong>{game.treatment.stageDuration}</strong> seconds before
+              moving to the next round.
             </p>
           </div>
 
@@ -435,7 +421,7 @@ export default class OutcomeStage extends React.Component {
                   <div className="profile-score">
                     <h4 className="bp3-heading">Total score</h4>
                     <Icon icon="dollar" iconSize={20} title={"dollar-sign"} />
-                    <span>{0}</span>
+                    <span>{player.get("instructionsCumulativeScore")}</span>
                   </div>
                   {OutcomeStage.renderTimer(remainingSeconds)}
                 </aside>
@@ -451,15 +437,14 @@ export default class OutcomeStage extends React.Component {
                     <FormGroup>
                       <Label>Your guess of the correlation is: {guess}</Label>
 
-                      <Slider
+                      <RangeSlider
+                        className={"range-slider"}
+                        disabled={true}
                         min={0}
                         max={1}
                         stepSize={0.01}
                         labelStepSize={0.25}
-                        onChange={this.handleChange}
-                        value={guess}
-                        hideHandleOnEmpty
-                        disabled
+                        value={guess ? [guess, 0.89].sort() : [0.89, 0.89]}
                       />
                     </FormGroup>
                     <div>
@@ -522,17 +507,19 @@ export default class OutcomeStage extends React.Component {
                 </div>
               </div>
 
-              <div
-                className="social-interaction revert"
-                style={{ width: "11rem" }}
-              >
-                {rewiring
-                  ? [
-                      this.renderLeftColumn(player, alters),
-                      this.renderRightColumn(nonAlters)
-                    ]
-                  : this.renderLeftColumn(player, alters)}
-              </div>
+              {game.treatment.altersCount > 1 ? (
+                <div
+                  className="social-interaction revert"
+                  style={{ width: "11rem" }}
+                >
+                  {rewiring
+                    ? [
+                        this.renderLeftColumn(player, alters),
+                        this.renderRightColumn(nonAlters)
+                      ]
+                    : this.renderLeftColumn(player, alters)}
+                </div>
+              ) : null}
             </div>
           </div>
 
@@ -571,6 +558,14 @@ export default class OutcomeStage extends React.Component {
     const sortedPlayers = playersList.sort(this.compareScores);
     const top3rd = Math.floor(playersList.length / 3);
     const bottom3rd = Math.floor(playersList.length - playersList.length / 3);
+
+    console.log("sortedPlayers", sortedPlayers);
+    if (sortedPlayers.length === 1) {
+      console.log("I am in");
+      this.props.player.set("instructionsScoreColor", null);
+      return;
+    }
+
     sortedPlayers.forEach((player, i) => {
       if (i < top3rd) {
         this.state.fakePlayers[player._id].scoreColor = "green";

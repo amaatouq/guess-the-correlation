@@ -73,7 +73,6 @@ export default class YourGuessStage extends React.Component {
       this.setState({ submitted: true });
     }
   }
-  
 
   static renderTimer(remainingSeconds) {
     const classes = ["timer"];
@@ -90,23 +89,23 @@ export default class YourGuessStage extends React.Component {
       </div>
     );
   }
-  
+
   handleChange = num => {
     const value = Math.round(num * 100) / 100;
     this.setState({ guess: value });
   };
-  
+
   handleRelease = num => {
     const { player } = this.props;
     const value = Math.round(num * 100) / 100;
     player.set("instructionsGuess", value);
   };
-  
+
   handleSubmit = event => {
     event.preventDefault();
     this.setState({ submitted: true });
   };
-  
+
   handleReset = event => {
     const { game } = this.props;
     event.preventDefault();
@@ -192,7 +191,7 @@ export default class YourGuessStage extends React.Component {
                   <div className="profile-score">
                     <h4 className="bp3-heading">Total score</h4>
                     <Icon icon="dollar" iconSize={20} title={"dollar-sign"} />
-                    <span>{0}</span>
+                    <span>{player.get("instructionsCumulativeScore")}</span>
                   </div>
                   {YourGuessStage.renderTimer(remainingSeconds)}
                 </aside>

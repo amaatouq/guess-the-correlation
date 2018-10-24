@@ -4,6 +4,11 @@ import { Centered } from "meteor/empirica:core";
 import { Button, ButtonGroup } from "@blueprintjs/core";
 
 export default class Overview extends React.Component {
+  constructor(props) {
+    super(props);
+    const { player } = this.props;
+    player.set("instructionsCumulativeScore", 101);
+  }
   render() {
     const { hasPrev, hasNext, onNext, onPrev, game } = this.props;
 

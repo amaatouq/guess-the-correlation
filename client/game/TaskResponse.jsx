@@ -130,6 +130,7 @@ export default class TaskResponse extends React.Component {
 
   render() {
     const { stage, round, player } = this.props;
+    //todo: add this back after the experiment
     const feedbackTime = round.get("displayFeedback");
 
     //if the player already submitted, don't show the slider or submit button
@@ -147,7 +148,7 @@ export default class TaskResponse extends React.Component {
             {this.renderSlider(player, round, isOutcome)}
           </FormGroup>
 
-          {isOutcome && feedbackTime
+          {isOutcome
             ? this.renderFeedback(player, round)
             : null}
 
@@ -163,6 +164,5 @@ export default class TaskResponse extends React.Component {
 }
 
 const throttledGuessUpdate = _.throttle((player, value) => {
-  console.log("insider threttle");
   player.round.set("guess", value);
 }, 500);

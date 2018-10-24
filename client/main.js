@@ -29,10 +29,9 @@ Empirica.consent(Consent);
 Empirica.introSteps(treatment => {
   const steps = [Overview, YourGuessStage];
 
-  if (treatment.playerCount > 1) {
+  if (treatment.altersCount > 1) {
     steps.push(InteractiveGuessStage);
   }
-  steps.push(InteractiveGuessStage);
   steps.push(OutcomeStage);
   steps.push(MoreAboutCorrelations);
   steps.push(Quiz);

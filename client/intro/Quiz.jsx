@@ -15,10 +15,18 @@ import {
 export default class Quiz extends React.Component {
   constructor(props) {
     super(props);
+    const { game } = this.props;
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleRadioChange = this.handleRadioChange.bind(this);
-    this.state = { nParticipants: "", goal: "", color: "", quizMistake: false };
+    this.state = {
+      nParticipants: !game.treatment.altersCount
+        ? game.treatment.altersCount.toString()
+        : "",
+      goal: "",
+      color: "",
+      quizMistake: false
+    };
   }
 
   handleChange = event => {
@@ -36,10 +44,6 @@ export default class Quiz extends React.Component {
   handleSubmit = event => {
     const { game } = this.props;
     event.preventDefault();
-
-    if (game.treatment.playerCount === 1) {
-      this.setState({ nParticipants: game.treatment.altersCount });
-    }
 
     if (
       this.state.nParticipants !== game.treatment.altersCount.toString() ||
@@ -61,7 +65,7 @@ export default class Quiz extends React.Component {
           <h1 className="bp3-heading"> Quiz </h1>
 
           <form onSubmit={this.handleSubmit}>
-            {game.treatment.playerCount > 1 ? (
+            {game.treatment.altersCount > 1 ? (
               <FormGroup
                 label={"What is the maximum number of people you can follow?"}
                 labelFor={"nParticipants"}

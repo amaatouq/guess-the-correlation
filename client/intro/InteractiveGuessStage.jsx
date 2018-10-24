@@ -280,7 +280,7 @@ export default class InteractiveGuessStage extends React.Component {
                   <div className="profile-score">
                     <h4 className="bp3-heading">Total score</h4>
                     <Icon icon="dollar" iconSize={20} title={"dollar-sign"} />
-                    <span>{0}</span>
+                    <span>{player.get("instructionsCumulativeScore")}</span>
                   </div>
                   {InteractiveGuessStage.renderTimer(remainingSeconds)}
                 </aside>
