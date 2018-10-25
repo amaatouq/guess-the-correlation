@@ -2,7 +2,7 @@ import React from "react";
 
 import { AlertToaster } from "meteor/empirica:core";
 import { Icon, Button, Card, Elevation } from "@blueprintjs/core";
-import {shuffle} from "shuffle-seed"
+import { shuffle } from "shuffle-seed";
 
 export default class SocialInteraction extends React.Component {
   handleUnfollow = (alterId, event) => {
@@ -24,8 +24,11 @@ export default class SocialInteraction extends React.Component {
       return;
     }
 
-    alterIds.push(alterId);
-    throttled(10000, player.set("alterIds", alterIds)); //this will slow down the update
+    //only add the alter to the list if it is not already in the list.
+    if (!alterIds.includes(alterId)) {
+      alterIds.push(alterId);
+      throttled(10000, player.set("alterIds", alterIds)); //this will slow down the update
+    }
   };
 
   renderUnfollow(alterId) {
@@ -81,7 +84,7 @@ export default class SocialInteraction extends React.Component {
     const roundScore = player.round.get("score") || 0;
 
     return (
-      <div className="right" key="left" style={{ "min-width": "18rem" }}>
+      <div className="right" key="left" style={{ minWidth: "18rem" }}>
         {feedbackTime ? (
           <p className="bp3-ui-text">
             <strong>Score:</strong> Total (+increment)
@@ -174,7 +177,7 @@ export default class SocialInteraction extends React.Component {
     //all players sorted by performance in descending order if feedback, otherwise, shuffle them
     const allPlayers = feedbackTime
       ? _.sortBy(game.players, p => p.get("cumulativeScore")).reverse()
-      : shuffle(game.players,player._id);
+      : shuffle(game.players, player._id);
 
     const alters = allPlayers.filter(p => alterIds.includes(p._id));
     const nonAlters = allPlayers.filter(p => nonAlterIds.includes(p._id));

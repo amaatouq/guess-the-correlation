@@ -33,7 +33,7 @@ export default class SocialExposure extends React.Component {
           min={0}
           max={1}
           stepSize={0.01}
-          value={guess}
+          value={guess || undefined}
           showTrackFill={false}
           disabled
           hideHandleOnEmpty

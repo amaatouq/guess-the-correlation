@@ -13,16 +13,29 @@ export default class TaskResponse extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { guess: this.props.player.round.get("guess") };
+    console.log("player.round._id", this.props.player.round._id);
+
+    const { player } = this.props;
+
+    this.throttledGuessUpdate = _.throttle(value => {
+      player.round.set("guess", value);
+    }, 500);
+
+    this.state = { guess: null };
+  }
+
+  componentDidMount() {
+    const { player } = this.props;
+
+    this.setState({ guess: player.round.get("guess") });
   }
 
   handleChange = num => {
-    const { stage, player } = this.props;
+    const { stage } = this.props;
     if (stage.name !== "outcome") {
       const value = Math.round(num * 100) / 100;
-      //_.throttle(player.round.set("guess", value),101000);
       this.setState({ guess: value });
-      throttledGuessUpdate(player, value);
+      this.throttledGuessUpdate(value);
       //player.round.set("guess", value)
     }
   };
@@ -31,6 +44,7 @@ export default class TaskResponse extends React.Component {
     const { stage, player } = this.props;
     if (stage.name !== "outcome") {
       const value = Math.round(num * 100) / 100;
+      this.setState({ guess: value });
       player.round.set("guess", value);
       player.stage.append("guess", value);
     }
@@ -64,13 +78,6 @@ export default class TaskResponse extends React.Component {
   };
 
   renderSlider(player, round, isOutcome) {
-    let guess = undefined;
-    if (isOutcome) {
-      guess = player.round.get("guess");
-    } else {
-      guess = this.state.guess;
-    }
-
     const feedbackTime = round.get("displayFeedback");
     const correctAnswer = round.get("task").correctAnswer;
     return (
@@ -84,7 +91,7 @@ export default class TaskResponse extends React.Component {
             stepSize={0.01}
             labelStepSize={0.25}
             value={
-              guess === undefined || guess === null
+              player.round.get("guess") === null
                 ? [correctAnswer, correctAnswer]
                 : [player.round.get("guess"), correctAnswer].sort()
             }
@@ -97,7 +104,7 @@ export default class TaskResponse extends React.Component {
             labelStepSize={0.25}
             onChange={this.handleChange}
             onRelease={this.handleRelease}
-            value={guess||undefined}
+            value={this.state.guess || undefined}
             disabled={isOutcome}
             hideHandleOnEmpty
           />
@@ -170,7 +177,3 @@ export default class TaskResponse extends React.Component {
     );
   }
 }
-
-const throttledGuessUpdate = _.throttle((player, value) => {
-  player.round.set("guess", value);
-}, 500);
