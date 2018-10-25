@@ -41,7 +41,7 @@ export default class OutcomeStage extends React.Component {
 
     player.set(
       "instructionsScore",
-      Math.round((1 - Math.abs(0.89 - player.get("instructionsGuess"))) * 100)
+      Math.round((1 - Math.abs(0.89 - player.get("instructionsGuess"))) * 10)
     );
 
     fakePlayers[player._id] = {
@@ -54,11 +54,11 @@ export default class OutcomeStage extends React.Component {
 
     //adding fake players
     for (let i = 0; i < game.treatment.playerCount - 1; i++) {
-      const score = Math.round(Math.random() * 100);
+      const score = Math.round(Math.random() * 10);
       fakePlayers[i] = {
         _id: i,
         avatar: `/avatars/jdenticon/${avatarNames[i]}`,
-        cumulativeScore: Math.round(score + Math.random() * 100),
+        cumulativeScore: Math.round(score + Math.random() * 10),
         score: score,
         scoreColor: null
       };
@@ -356,34 +356,56 @@ export default class OutcomeStage extends React.Component {
             <h3 className="bp3-heading">{nStages}. The Outcome Stage</h3>
 
             <p>
-              in the <strong>Outcome</strong> stage, you will see your{" "}
-              <strong>
-                final guess (in this case it is{" "}
-                {player.get("instructionsGuess")})
-              </strong>{" "}
-              vs. the actual correlation value{" "}
-              <strong>(in this case 0.89)</strong>, and the score you have{" "}
-              <strong>
-                accumulated so far from previous rounds (e.g., total of{" "}
-                {player.get("instructionsCumulativeScore")})
-              </strong>{" "}
-              and the additional score you have earned from this{" "}
-              <strong style={{ color: player.get("instructionsScoreColor") }}>
-                particular round (e.g., {player.get("instructionsScore")} )
-              </strong>
-              {game.treatment.altersCount > 1 ? (
-                <span>
-                  . You will also see the scores of all players, and you can
-                  choose who you want to follow in the next round. Use the
-                  unfollow and follow buttons to{" "}
-                  <strong>
-                    choose a maximum of {game.treatment.altersCount} players
+              In the <strong>Outcome</strong> stage:{" "}
+              <ul>
+                <li>
+                  You will see <strong>your final guess</strong> (in this case
+                  it is {player.get("instructionsGuess")})
+                </li>
+
+                <li>
+                  You will see the <strong>actual correlation</strong> value (in
+                  this case 0.89)
+                </li>
+
+                <li>
+                  You will see the{" "}
+                  <strong
+                    style={{ color: player.get("instructionsScoreColor") }}
+                  >
+                    score you earned this round (e.g.,{" "}
+                    {player.get("instructionsScore")} )
                   </strong>
-                </span>
-              ) : null}
-              . You can take maximum{" "}
-              <strong>{game.treatment.stageDuration}</strong> seconds before
-              moving to the next round.
+                </li>
+
+                <li>
+                  You will see your <strong>cummulative score </strong> (e.g.,
+                  total of {player.get("instructionsCumulativeScore")})
+                </li>
+
+                {game.treatment.altersCount > 1 &&
+                game.treatment.feedbackRate > 0 ? (
+                  <li>You will also see the scores of all players</li>
+                ) : null}
+
+                {game.treatment.altersCount > 1 ? (
+                  <li>
+                    <span>
+                      You can use the{" "}
+                      <strong>
+                        unfollow and follow buttons to choose a maximum of{" "}
+                        {game.treatment.altersCount} players
+                      </strong>
+                    </span>
+                  </li>
+                ) : null}
+
+                <li>
+                  You can take maximum{" "}
+                  <strong>{game.treatment.stageDuration}</strong> seconds before
+                  moving to the next round.
+                </li>
+              </ul>
             </p>
           </div>
 

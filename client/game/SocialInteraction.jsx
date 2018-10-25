@@ -2,6 +2,7 @@ import React from "react";
 
 import { AlertToaster } from "meteor/empirica:core";
 import { Icon, Button, Card, Elevation } from "@blueprintjs/core";
+import {shuffle} from "shuffle-seed"
 
 export default class SocialInteraction extends React.Component {
   handleUnfollow = (alterId, event) => {
@@ -170,10 +171,11 @@ export default class SocialInteraction extends React.Component {
 
     //actual Player objects and not only Ids for alters and nonAlters
 
-    //all players sorted by performance in descending order
-    const allPlayers = _.sortBy(game.players, p =>
-      p.get("cumulativeScore")
-    ).reverse();
+    //all players sorted by performance in descending order if feedback, otherwise, shuffle them
+    const allPlayers = feedbackTime
+      ? _.sortBy(game.players, p => p.get("cumulativeScore")).reverse()
+      : shuffle(game.players,player._id);
+
     const alters = allPlayers.filter(p => alterIds.includes(p._id));
     const nonAlters = allPlayers.filter(p => nonAlterIds.includes(p._id));
 

@@ -31,7 +31,8 @@ export default class TaskResponse extends React.Component {
     const { stage, player } = this.props;
     if (stage.name !== "outcome") {
       const value = Math.round(num * 100) / 100;
-      _.throttle(player.stage.append("guess", value), 100);
+      player.round.set("guess", value);
+      player.stage.append("guess", value);
     }
   };
 
@@ -63,7 +64,13 @@ export default class TaskResponse extends React.Component {
   };
 
   renderSlider(player, round, isOutcome) {
-    const guess = this.state.guess;
+    let guess = undefined;
+    if (isOutcome) {
+      guess = player.round.get("guess");
+    } else {
+      guess = this.state.guess;
+    }
+
     const feedbackTime = round.get("displayFeedback");
     const correctAnswer = round.get("task").correctAnswer;
     return (
@@ -77,9 +84,9 @@ export default class TaskResponse extends React.Component {
             stepSize={0.01}
             labelStepSize={0.25}
             value={
-              guess
-                ? [guess, correctAnswer].sort()
-                : [correctAnswer, correctAnswer]
+              guess === undefined || guess === null
+                ? [correctAnswer, correctAnswer]
+                : [player.round.get("guess"), correctAnswer].sort()
             }
           />
         ) : (
@@ -90,7 +97,7 @@ export default class TaskResponse extends React.Component {
             labelStepSize={0.25}
             onChange={this.handleChange}
             onRelease={this.handleRelease}
-            value={guess}
+            value={guess||undefined}
             disabled={isOutcome}
             hideHandleOnEmpty
           />
@@ -113,7 +120,10 @@ export default class TaskResponse extends React.Component {
           <tbody>
             <tr>
               <td align="center">
-                {player.round.get("guess") || "No guess given"}
+                {player.round.get("guess") === undefined ||
+                player.round.get("guess") === null
+                  ? "No guess given"
+                  : player.round.get("guess")}
               </td>
               <td>{round.get("task").correctAnswer}</td>
               <td>
@@ -148,9 +158,7 @@ export default class TaskResponse extends React.Component {
             {this.renderSlider(player, round, isOutcome)}
           </FormGroup>
 
-          {isOutcome
-            ? this.renderFeedback(player, round)
-            : null}
+          {isOutcome ? this.renderFeedback(player, round) : null}
 
           <FormGroup>
             <Button type="submit" icon={"tick"} large={true} fill={true}>

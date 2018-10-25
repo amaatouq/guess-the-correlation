@@ -141,14 +141,14 @@ export default class YourGuessStage extends React.Component {
           <p>
             You will play <strong>{game.treatment.nRounds} rounds</strong> total
             {nStages > 1
-              ? "and each round will consist of " + nStages + " stages."
+              ? " and each round will consist of " + nStages + " stages."
               : "."}
           </p>
 
           <h3 className="bp3-heading">1. The Response Stage</h3>
 
           <p>
-            in the <strong>Response</strong> stage you will be shown a
+            In the <strong>Response</strong> stage you will be shown a
             correlation like the one shown below. You will be able to use the
             slider to pick a value, and then click <strong>Submit</strong> when
             you are ready. You can take maximum{" "}

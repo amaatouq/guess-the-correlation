@@ -26,10 +26,10 @@ Empirica.consent(Consent);
 // Introduction pages to show before they play the game (optional).
 // At this point they have been assigned a treatment. You can return
 // different instruction steps depending on the assigned treatment.
-Empirica.introSteps(treatment => {
+Empirica.introSteps(game => {
   const steps = [Overview, YourGuessStage];
 
-  if (treatment.altersCount > 1) {
+  if (game.treatment.altersCount > 1) {
     steps.push(InteractiveGuessStage);
   }
   steps.push(OutcomeStage);

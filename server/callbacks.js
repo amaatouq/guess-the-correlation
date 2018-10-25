@@ -1,48 +1,4 @@
 import Empirica from "meteor/empirica:core";
-import { difficulties } from "./constants";
-
-//this only works if we have 12 participants
-const initial_network = {
-  0: [2, 4, 9],
-  1: [4, 8, 2],
-  2: [4, 10, 3],
-  3: [6, 10, 0],
-  4: [0, 6, 8],
-  5: [6, 9, 11],
-  6: [5, 11, 10],
-  7: [1, 5, 0],
-  8: [3, 1, 7],
-  9: [7, 2, 5],
-  10: [1, 3, 11],
-  11: [9, 7, 8]
-};
-
-function getAlters(player, playerIndex, playerIds, alterCount) {
-  //using the initial network structure to create the network, otherwise, a random network
-
-  let alterIds = [];
-  if (playerIds.length === 12) {
-    alterIds = playerIds.filter(
-      (elt, i) => initial_network[playerIndex].indexOf(i) > -1
-    );
-    console.log(
-      "player ",
-      playerIndex,
-      "got: ",
-      initial_network[playerIndex],
-      "actual alters: ",
-      alterIds
-    );
-  } else {
-    alterIds = _.sample(_.without(playerIds, player._id), alterCount);
-  }
-
-  return alterIds;
-}
-
-function getAvatar(player, i) {
-  return i > 16 ? `/avatars/jdenticon/${player._id}` : `/avatars/${i}.png`;
-}
 
 // onGameStart is triggered once per game before the game starts, and before
 // the first onRoundStart. It receives the game and list of all the players in
@@ -51,24 +7,6 @@ Empirica.onGameStart((game, players) => {
   game.set("justStarted", true); // I use this to play the sound on the UI when the game starts
 
   console.log("game", game._id, "started");
-
-  //prepare players by creating the network
-  const playerIds = _.pluck(players, "_id");
-  players.forEach((player, i) => {
-    const alterIds = getAlters(
-      player,
-      i,
-      playerIds,
-      game.treatment.altersCount
-    );
-
-    player.set("avatar", getAvatar(player, i));
-    //equal number of difficulties .. this can be changed to change the fraction of easy/medium/hard
-    player.set("difficulty", difficulties[i % difficulties.length]);
-    player.set("alterIds", alterIds);
-    player.set("cumulativeScore", 0);
-    player.set("bonus", 0);
-  });
 });
 
 // onRoundStart is triggered before each round starts, and before onStageStart.
@@ -77,6 +15,7 @@ Empirica.onRoundStart((game, round, players) => {
   console.log("round", round.index, "started");
   players.forEach(player => {
     player.round.set("alterIds", player.get("alterIds"));
+    player.round.set("guess", undefined);
   });
 
   const feedbackTime =
@@ -105,7 +44,9 @@ Empirica.onStageEnd((game, round, stage, players) => {
   } else if (stage.name === "interactive") {
     //after the 'interactive' stage, we compute the score and color it
     computeScore(players, round);
-    colorScores(players);
+    if (game.treatment.altersCount > 0 && round.get("displayFeedback")) {
+      colorScores(players);
+    }
   }
 });
 
@@ -116,7 +57,8 @@ Empirica.onRoundEnd((game, round, players) => {
   players.forEach(player => {
     const currentScore = player.get("cumulativeScore");
     const roundScore = player.round.get("score");
-    player.set("cumulativeScore", Math.round(currentScore + roundScore));
+    const cumScore = Math.round((currentScore + roundScore) * 100) / 100;
+    player.set("cumulativeScore", cumScore);
   });
 
   //checking whether the game contains shock and whether it is time for it!
@@ -141,7 +83,8 @@ Empirica.onGameEnd((game, players) => {
   console.log("The game", game._id, "has ended");
   const conversionRate = game.treatment.conversionRate;
   players.forEach(player => {
-    const bonus = Math.round(player.get("cumulativeScore") * conversionRate);
+    const bonus =
+      Math.round(player.get("cumulativeScore") * conversionRate * 100) / 100;
     player.set("bonus", bonus);
   });
 });
@@ -154,9 +97,12 @@ function computeScore(players, round) {
   players.forEach(player => {
     const guess = player.round.get("guess");
     // If no guess given, score is 0
-    const score = !guess
-      ? 0
-      : Math.round((1 - Math.abs(correctAnswer - guess)) * 100);
+    const error =
+      guess === undefined || guess === null
+        ? 1
+        : Math.abs(correctAnswer - guess);
+
+    const score = Math.round((1 - error) ** 2 * 100) / 10;
 
     player.round.set("score", score);
   });
@@ -198,7 +144,7 @@ function compareScores(firstPlayer, secondPlayer) {
 // Shocking the players by changing the difficulty of the problem that they see
 // -1 permutation: easy => hard; medium => easy; hard => medium.
 function shock(players) {
-  console.log("time for shock");
+  console.log("time for shock [inside shock(players]");
   players.forEach(player => {
     const currentDifficulty = player.get("difficulty");
     if (currentDifficulty === "easy") {

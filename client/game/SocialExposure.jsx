@@ -1,6 +1,7 @@
 import React from "react";
 import Slider from "meteor/empirica:slider";
 import { Card, Elevation } from "@blueprintjs/core";
+import { shuffle } from "shuffle-seed";
 
 export default class SocialExposure extends React.Component {
   renderSocialInteraction = otherPlayer => {
@@ -18,7 +19,9 @@ export default class SocialExposure extends React.Component {
           >
             <span
               className={`bp3-icon-standard ${
-                otherPlayer.stage.submitted ? "bp3-icon-tick" : "bp3-icon-refresh"
+                otherPlayer.stage.submitted
+                  ? "bp3-icon-tick"
+                  : "bp3-icon-refresh"
               }`}
             />
           </span>
@@ -40,13 +43,16 @@ export default class SocialExposure extends React.Component {
   };
 
   render() {
-    const { game, player } = this.props;
+    const { game, player, round } = this.props;
 
     const alterIds = player.get("alterIds");
+    const feedbackTime = round.get("displayFeedback");
 
-    const allPlayers = _.sortBy(game.players, p =>
-      p.get("cumulativeScore")
-    ).reverse();
+    //all players sorted by performance in descending order if feedback, otherwise, shuffle but seed by player id (the same player will see the same order for the entire game
+    const allPlayers = feedbackTime
+      ? _.sortBy(game.players, p => p.get("cumulativeScore")).reverse()
+      : shuffle(game.players, player._id);
+
     const alters = allPlayers.filter(p => alterIds.includes(p._id));
 
     return (

@@ -11,7 +11,6 @@ import {
   Label
 } from "@blueprintjs/core";
 import Slider from "meteor/empirica:slider";
-import Timer from "../game/Timer";
 
 const avatarNames = "abcdefghijklmnopqrstuvwxyz".split("");
 
@@ -113,7 +112,7 @@ export default class InteractiveGuessStage extends React.Component {
 
   handleReset = event => {
     const { game } = this.props;
-  
+
     event.preventDefault();
     this.setState({ submitted: false });
 
@@ -129,32 +128,33 @@ export default class InteractiveGuessStage extends React.Component {
   };
 
   componentDidUpdate() {
+    //TODO: decided not to make the mockup fake players change values so workers wouldn't think the actual game is with bots
     //check if we want to update or not .. most of the times, we don't want to
-    if (Math.random() > 0.8) {
-      for (const [_id, fakePlayer] of Object.entries(this.state.fakePlayers)) {
-        //not everyone updates
-        if (Math.random() > 0.5 && !fakePlayer.submitted) {
-          let change = Math.random() / 10.0;
-          change *= Math.random() * 2 === 1 ? 1 : -1; //make the change + or -
-          if (fakePlayer.initialGuess + change > 0.99) {
-            fakePlayer.initialGuess -= 10 * change;
-          } else if (fakePlayer.initialGuess + change < 0) {
-            fakePlayer.initialGuess -= 10 * change;
-          } else {
-            fakePlayer.initialGuess += change;
-          }
-        }
-      }
-    }
-
-    if (Math.random() > 0.9) {
-      for (const [_id, fakePlayer] of Object.entries(this.state.fakePlayers)) {
-        //not everyone updates
-        if (Math.random() > 0.8) {
-          fakePlayer.submitted = true;
-        }
-      }
-    }
+    // if (Math.random() > 0.8) {
+    //   for (const [_id, fakePlayer] of Object.entries(this.state.fakePlayers)) {
+    //     //not everyone updates
+    //     if (Math.random() > 0.5 && !fakePlayer.submitted) {
+    //       let change = Math.random() / 10.0;
+    //       change *= Math.random() * 2 === 1 ? 1 : -1; //make the change + or -
+    //       if (fakePlayer.initialGuess + change > 0.99) {
+    //         fakePlayer.initialGuess -= 10 * change;
+    //       } else if (fakePlayer.initialGuess + change < 0) {
+    //         fakePlayer.initialGuess -= 10 * change;
+    //       } else {
+    //         fakePlayer.initialGuess += change;
+    //       }
+    //     }
+    //   }
+    // }
+    //
+    // if (Math.random() > 0.9) {
+    //   for (const [_id, fakePlayer] of Object.entries(this.state.fakePlayers)) {
+    //     //not everyone updates
+    //     if (Math.random() > 0.8) {
+    //       fakePlayer.submitted = true;
+    //     }
+    //   }
+    // }
   }
 
   renderAlters = () => {
@@ -229,21 +229,21 @@ export default class InteractiveGuessStage extends React.Component {
           <p>
             You will play <strong>{game.treatment.nRounds} rounds</strong> total
             {nStages > 1
-              ? "and each round will consist of " + nStages + " stages."
+              ? " and each round will consist of " + nStages + " stages."
               : "."}
           </p>
 
           <h3 className="bp3-heading">2. Interactive Response Stage</h3>
 
           <p>
-            in the <strong>Interactive Response</strong> stage, you will see the
+            In the <strong>Interactive Response</strong> stage, you will see the
             guesses of{" "}
             <strong>{game.treatment.altersCount} other players</strong>. You can
             change your guess by using the slider, and see how other players
             change their guesses in real-time. You can take maximum{" "}
             <strong>{game.treatment.stageDuration}</strong> seconds to submit
             your answer. The <strong>tick mark</strong> by the avatar indicates
-            whether a final answer have been submitted for this stage.
+            whether a final answer has been submitted for this stage.
           </p>
 
           <div className="round">
