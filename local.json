@@ -4,5 +4,19 @@
       "username": "admin",
       "password": "admin"
     }
-  ]
+  ],
+  "public": {
+    "playerIdParam": "workerId",
+
+    "playerIdParamExclusive": false,
+
+    "debug_newPlayer": true,
+
+    "debug_resetSession": true,
+
+    "debug_resetDatabase": true,
+
+
+    "debug_gameDebugMode": true
+  }
 }
