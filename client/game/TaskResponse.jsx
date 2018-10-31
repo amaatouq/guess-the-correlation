@@ -13,28 +13,22 @@ export default class TaskResponse extends React.Component {
   constructor(props) {
     super(props);
 
-    console.log("player.round._id", this.props.player.round._id);
-
-    const { player } = this.props;
-
+    // console.log("player.round._id", this.props.player.round._id);
+    //
+    // const { player } = this.props;
+    //
     this.throttledGuessUpdate = _.throttle(value => {
       player.round.set("guess", value);
-    }, 500);
-
-    this.state = { guess: null };
-  }
-
-  componentDidMount() {
-    const { player } = this.props;
-
-    this.setState({ guess: player.round.get("guess") });
+    }, 100);
+    //
+    // this.state = { guess: null };
   }
 
   handleChange = num => {
     const { stage } = this.props;
     if (stage.name !== "outcome") {
       const value = Math.round(num * 100) / 100;
-      this.setState({ guess: value });
+      //this.setState({ guess: value });
       this.throttledGuessUpdate(value);
       //player.round.set("guess", value)
     }
@@ -44,7 +38,7 @@ export default class TaskResponse extends React.Component {
     const { stage, player } = this.props;
     if (stage.name !== "outcome") {
       const value = Math.round(num * 100) / 100;
-      this.setState({ guess: value });
+      //this.setState({ guess: value });
       player.round.set("guess", value);
       player.stage.append("guess", value);
     }
@@ -72,7 +66,7 @@ export default class TaskResponse extends React.Component {
   renderCurrentGuess = player => {
     return (
       <Label>
-        Your current guess of the correlation is: {this.state.guess}
+        Your current guess of the correlation is: {player.round.get("guess")}
       </Label>
     );
   };
@@ -104,7 +98,7 @@ export default class TaskResponse extends React.Component {
             labelStepSize={0.25}
             onChange={this.handleChange}
             onRelease={this.handleRelease}
-            value={this.state.guess || undefined}
+            value={player.round.get("guess") || undefined}
             disabled={isOutcome}
             hideHandleOnEmpty
           />
