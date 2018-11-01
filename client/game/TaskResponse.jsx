@@ -17,20 +17,20 @@ export default class TaskResponse extends React.Component {
     //
     // const { player } = this.props;
     //
-    this.throttledGuessUpdate = _.throttle(value => {
-      player.round.set("guess", value);
-    }, 100);
+    // this.throttledGuessUpdate = _.throttle(value => {
+    //   player.round.set("guess", value);
+    // }, 50);
     //
     // this.state = { guess: null };
   }
 
   handleChange = num => {
-    const { stage } = this.props;
+    const { stage,player } = this.props;
     if (stage.name !== "outcome") {
       const value = Math.round(num * 100) / 100;
       //this.setState({ guess: value });
-      this.throttledGuessUpdate(value);
-      //player.round.set("guess", value)
+      // this.throttledGuessUpdate(value);
+      player.round.set("guess", value)
     }
   };
 

@@ -70,6 +70,12 @@ export default class InteractiveGuessStage extends React.Component {
     this.setState({ time: timeLeftVar });
     this.startTimer();
   }
+  
+  //prevents memory leak: https://egghead.io/lessons/react-stop-memory-leaks-with-componentwillunmount-lifecycle-method-in-react
+  componentWillUnmount(){
+    clearInterval(this.timer);
+    clearInterval(this.countDown);
+  }
 
   startTimer() {
     if (this.timer === 0 && this.state.seconds > 0) {

@@ -81,7 +81,7 @@ Empirica.onRoundEnd((game, round, players) => {
 // It receives the same options as onGameStart.
 Empirica.onGameEnd((game, players) => {
   console.log("The game", game._id, "has ended");
-  const conversionRate = game.treatment.conversionRate;
+  const conversionRate = game.treatment.conversionRate || 1;
   players.forEach(player => {
     const bonus =
       Math.round(player.get("cumulativeScore") * conversionRate * 100) / 100;

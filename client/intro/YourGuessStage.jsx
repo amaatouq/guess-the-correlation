@@ -28,27 +28,16 @@ export default class YourGuessStage extends React.Component {
     this.countDown = this.countDown.bind(this);
   }
 
-  static secondsToTime(secs) {
-    let hours = Math.floor(secs / (60 * 60));
-
-    let divisor_for_minutes = secs % (60 * 60);
-    let minutes = Math.floor(divisor_for_minutes / 60);
-
-    let divisor_for_seconds = divisor_for_minutes % 60;
-    let seconds = Math.ceil(divisor_for_seconds);
-
-    let obj = {
-      h: hours,
-      m: minutes,
-      s: seconds
-    };
-    return obj;
-  }
-
   componentDidMount() {
-    let timeLeftVar = YourGuessStage.secondsToTime(this.state.seconds);
+    let timeLeftVar = secondsToTime(this.state.seconds);
     this.setState({ time: timeLeftVar });
     this.startTimer();
+  }
+  
+  //prevents memory leak: https://egghead.io/lessons/react-stop-memory-leaks-with-componentwillunmount-lifecycle-method-in-react
+  componentWillUnmount(){
+    clearInterval(this.timer);
+    clearInterval(this.countDown);
   }
 
   startTimer() {
@@ -63,7 +52,7 @@ export default class YourGuessStage extends React.Component {
     if (!this.state.submitted) {
       // Remove one second, set state so a re-render happens.
       this.setState({
-        time: YourGuessStage.secondsToTime(seconds),
+        time: secondsToTime(seconds),
         seconds: seconds
       });
     }
@@ -72,22 +61,6 @@ export default class YourGuessStage extends React.Component {
     if (seconds === 0) {
       this.setState({ submitted: true });
     }
-  }
-
-  static renderTimer(remainingSeconds) {
-    const classes = ["timer"];
-    if (remainingSeconds <= 5) {
-      classes.push("lessThan5");
-    } else if (remainingSeconds <= 10) {
-      classes.push("lessThan10");
-    }
-
-    return (
-      <div className={classes.join(" ")}>
-        <h4 className="bp3-heading">Timer</h4>
-        <span className="seconds">{remainingSeconds}</span>
-      </div>
-    );
   }
 
   handleChange = num => {
@@ -193,7 +166,7 @@ export default class YourGuessStage extends React.Component {
                     <Icon icon="dollar" iconSize={20} title={"dollar-sign"} />
                     <span>{player.get("instructionsCumulativeScore")}</span>
                   </div>
-                  {YourGuessStage.renderTimer(remainingSeconds)}
+                  {renderTimer(remainingSeconds)}
                 </aside>
               </Card>
 
@@ -279,4 +252,37 @@ export default class YourGuessStage extends React.Component {
       </Centered>
     );
   }
+}
+
+function secondsToTime(secs) {
+  let hours = Math.floor(secs / (60 * 60));
+
+  let divisor_for_minutes = secs % (60 * 60);
+  let minutes = Math.floor(divisor_for_minutes / 60);
+
+  let divisor_for_seconds = divisor_for_minutes % 60;
+  let seconds = Math.ceil(divisor_for_seconds);
+
+  let obj = {
+    h: hours,
+    m: minutes,
+    s: seconds
+  };
+  return obj;
+}
+
+function renderTimer(remainingSeconds) {
+  const classes = ["timer"];
+  if (remainingSeconds <= 5) {
+    classes.push("lessThan5");
+  } else if (remainingSeconds <= 10) {
+    classes.push("lessThan10");
+  }
+
+  return (
+    <div className={classes.join(" ")}>
+      <h4 className="bp3-heading">Timer</h4>
+      <span className="seconds">{remainingSeconds}</span>
+    </div>
+  );
 }

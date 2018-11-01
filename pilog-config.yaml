@@ -1,0 +1,190 @@
+treatments:
+  - name: solo
+    factorIds:
+      - ejXfbGQi6bjynMcJN
+      - XESjaeAiQgYzcMSFs
+      - L7Rk9NpHJ73DoXfNM
+      - 96JoMFdWsBq2npa2s
+      - tpACZhLNr2tidvm5N
+      - X5rYZ3XaD9iCy7Xhd
+      - p3eZ9uneAXaXeW3WH
+      - 2xyBcBhrMd5Pupbz4
+      - EX6KLoSYPEcMS7gtf
+      - t4JkCz4Gw2fPyZPQC
+      - jaFMpQBougMKL7EYb
+  - name: dynamic_feedback
+    factorIds:
+      - 8tkmwgeKd6y4JBXrC
+      - XESjaeAiQgYzcMSFs
+      - r7GT6TSNGhsNAHvCx
+      - 96JoMFdWsBq2npa2s
+      - ofZMnTd9w6w5yudxt
+      - X5rYZ3XaD9iCy7Xhd
+      - p3eZ9uneAXaXeW3WH
+      - 2xyBcBhrMd5Pupbz4
+      - EX6KLoSYPEcMS7gtf
+      - t4JkCz4Gw2fPyZPQC
+      - QRB6bQ52uH3fw4bDZ
+  - name: dynamic_noFeedback
+    factorIds:
+      - 8tkmwgeKd6y4JBXrC
+      - XESjaeAiQgYzcMSFs
+      - r7GT6TSNGhsNAHvCx
+      - 96JoMFdWsBq2npa2s
+      - ofZMnTd9w6w5yudxt
+      - iTEoNzbD9Kargfxuo
+      - p3eZ9uneAXaXeW3WH
+      - 2xyBcBhrMd5Pupbz4
+      - EX6KLoSYPEcMS7gtf
+      - t4JkCz4Gw2fPyZPQC
+      - P6ciCBRCKDuwbj9Yr
+factorTypes:
+  - _id: WKCgRpHm6LToea8o2
+    name: playerCount
+    description: The Number of players participating in the given game.
+    required: true
+    type: Integer
+    min: 1
+  - _id: ra5PM875WMvEnppGS
+    name: botsCount
+    description: The Number of bots that should participate in a given game
+    required: false
+    type: Number
+    min: 0
+    max: 100
+  - _id: 7xNFGv5WCZAXxjZKc
+    name: altersCount
+    description: The Number of connections for each player
+    required: true
+    type: Integer
+    min: 0
+    max: 50
+  - _id: QzogBfgatZr8JuAP3
+    name: stageDuration
+    description: The maximum time in seconds for each stage before moving to the next
+    required: true
+    type: Integer
+    min: 5
+    max: 60
+  - _id: wAD8GzhvbTy4wHimY
+    name: rewiring
+    description: Can the player change their alters on each round
+    required: true
+    type: Boolean
+  - _id: 8gqCENQ45X9KBWhgS
+    name: feedbackRate
+    description: how frequent the feedback is (1 = every round; 0 = never)
+    required: true
+    type: Number
+    min: 0
+    max: 1
+  - _id: QGXdyRSPsEnjDNqNW
+    name: feedbackNoise
+    description: The level of noise added to performance of the alters
+    required: false
+    type: Number
+    min: 0
+    max: 1
+  - _id: nixpWHDsnQ9TeEZrQ
+    name: shockRate
+    description: The rate at which we change difficulties for the players
+    required: true
+    type: Number
+    min: 0
+    max: 1
+  - _id: ivryKtaipqLtfguqP
+    name: nRounds
+    description: This is the number of rounds for the game
+    required: true
+    type: Integer
+    min: 1
+    max: 20
+  - _id: jevHL4F8Rxf9dy3Aq
+    name: basePay
+    description: base pay payment for completing this HIT
+    required: true
+    type: Number
+    min: 0
+    max: 10
+  - _id: aBXGNLTdkB2idcFpH
+    name: conversionRate
+    description: converting the game points into actual money
+    required: false
+    type: Number
+    min: 0
+    max: 1
+factors:
+  - _id: ofZMnTd9w6w5yudxt
+    name: 'true'
+    value: true
+    factorTypeId: wAD8GzhvbTy4wHimY
+  - _id: tpACZhLNr2tidvm5N
+    name: 'false'
+    value: false
+    factorTypeId: wAD8GzhvbTy4wHimY
+  - _id: ejXfbGQi6bjynMcJN
+    name: solo
+    value: 1
+    factorTypeId: WKCgRpHm6LToea8o2
+  - _id: 8tkmwgeKd6y4JBXrC
+    name: team
+    value: 12
+    factorTypeId: WKCgRpHm6LToea8o2
+  - _id: XESjaeAiQgYzcMSFs
+    name: '0'
+    value: 0
+    factorTypeId: ra5PM875WMvEnppGS
+  - _id: L7Rk9NpHJ73DoXfNM
+    name: '0'
+    value: 0
+    factorTypeId: 7xNFGv5WCZAXxjZKc
+  - _id: r7GT6TSNGhsNAHvCx
+    name: '3'
+    value: 3
+    factorTypeId: 7xNFGv5WCZAXxjZKc
+  - _id: 96JoMFdWsBq2npa2s
+    name: '30'
+    value: 30
+    factorTypeId: QzogBfgatZr8JuAP3
+  - _id: iTEoNzbD9Kargfxuo
+    name: never
+    value: 0
+    factorTypeId: 8gqCENQ45X9KBWhgS
+  - _id: X5rYZ3XaD9iCy7Xhd
+    name: always
+    value: 1
+    factorTypeId: 8gqCENQ45X9KBWhgS
+  - _id: p3eZ9uneAXaXeW3WH
+    name: '0'
+    value: 0
+    factorTypeId: QGXdyRSPsEnjDNqNW
+  - _id: 2xyBcBhrMd5Pupbz4
+    name: '0.1'
+    value: 0.1
+    factorTypeId: nixpWHDsnQ9TeEZrQ
+  - _id: EX6KLoSYPEcMS7gtf
+    name: full
+    value: 20
+    factorTypeId: ivryKtaipqLtfguqP
+  - _id: t4JkCz4Gw2fPyZPQC
+    name: '2'
+    value: 2
+    factorTypeId: jevHL4F8Rxf9dy3Aq
+  - _id: jaFMpQBougMKL7EYb
+    name: '0.01'
+    value: 0.01
+    factorTypeId: aBXGNLTdkB2idcFpH
+  - _id: QRB6bQ52uH3fw4bDZ
+    name: '0.035'
+    value: 0.035
+    factorTypeId: aBXGNLTdkB2idcFpH
+  - _id: P6ciCBRCKDuwbj9Yr
+    name: '0.04'
+    value: 0.04
+    factorTypeId: aBXGNLTdkB2idcFpH
+lobbyConfigs:
+  - name: 10min
+    timeoutType: lobby
+    timeoutInSeconds: 600
+    timeoutStrategy: fail
+    gameLobbyIds: []

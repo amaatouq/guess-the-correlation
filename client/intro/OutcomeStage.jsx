@@ -94,6 +94,12 @@ export default class OutcomeStage extends React.Component {
     this.startTimer();
   }
 
+  //prevents memory leak: https://egghead.io/lessons/react-stop-memory-leaks-with-componentwillunmount-lifecycle-method-in-react
+  componentWillUnmount() {
+    clearInterval(this.timer);
+    clearInterval(this.countDown);
+  }
+
   static secondsToTime(secs) {
     let hours = Math.floor(secs / (60 * 60));
 
@@ -199,7 +205,11 @@ export default class OutcomeStage extends React.Component {
     const feedbackTime = this.state.feedbackTime;
 
     return (
-      <Card className={"alter"} elevation={Elevation.TWO} key={otherPlayer._id}>
+      <Card
+        className={"alter"}
+        elevation={Elevation.TWO}
+        key={`alter_${otherPlayer._id}`}
+      >
         <div className="info">
           <img src={otherPlayer.avatar} className="profile-avatar" />
           {/*only show the scores of the alters if feedback is allowed*/}
@@ -226,7 +236,7 @@ export default class OutcomeStage extends React.Component {
     const feedbackTime = this.state.feedbackTime;
 
     return (
-      <div className="right" key="right" style={{ minWidth: "18rem" }}>
+      <div className="right" key="right1" style={{ minWidth: "18rem" }}>
         {feedbackTime ? (
           <p>
             <strong>Score:</strong> Total (+increment)
@@ -260,7 +270,7 @@ export default class OutcomeStage extends React.Component {
     const roundScore = otherPlayer.score || 0;
     const feedbackTime = this.state.feedbackTime;
     return (
-      <div className="non-alter" key={otherPlayer._id}>
+      <div className="non-alter" key={`non_alter_${otherPlayer._id}`}>
         <Button
           intent={"primary"}
           minimal={true}
@@ -290,7 +300,7 @@ export default class OutcomeStage extends React.Component {
 
   renderRightColumn(nonAlterIds) {
     return (
-      <div className="right" key="right" style={{ minWidth: "12rem" }}>
+      <div className="right" key="rightRight" style={{ minWidth: "12rem" }}>
         <p>
           <strong>You can follow:</strong>
         </p>
@@ -355,7 +365,7 @@ export default class OutcomeStage extends React.Component {
 
             <h3 className="bp3-heading">{nStages}. The Outcome Stage</h3>
 
-            <p>
+            <span>
               In the <strong>Outcome</strong> stage:{" "}
               <ul>
                 <li>
@@ -406,7 +416,7 @@ export default class OutcomeStage extends React.Component {
                   moving to the next round.
                 </li>
               </ul>
-            </p>
+            </span>
           </div>
 
           <div className="round">
@@ -581,9 +591,7 @@ export default class OutcomeStage extends React.Component {
     const top3rd = Math.floor(playersList.length / 3);
     const bottom3rd = Math.floor(playersList.length - playersList.length / 3);
 
-    console.log("sortedPlayers", sortedPlayers);
     if (sortedPlayers.length === 1) {
-      console.log("I am in");
       this.props.player.set("instructionsScoreColor", null);
       return;
     }
