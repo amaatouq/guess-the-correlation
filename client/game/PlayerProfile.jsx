@@ -42,14 +42,17 @@ export default class PlayerProfile extends React.Component {
   }
 
   render() {
-    const { stage } = this.props;
+    const { game, round, stage } = this.props;
+
+    const feedbackTime = round.get("displayFeedback");
+    const selfFeedback = game.treatment.selfFeedback;
 
     return (
       <Card className={"player-profile"}>
         <aside>
           {this.renderProfile()}
-          {/*We always show individual level feedback*/}
-          {this.renderScore()}
+          {/*We only show individual level feedback if it is feedback time & we show individual feedback*/}
+          {feedbackTime && selfFeedback ? this.renderScore() : null}
           <Timer stage={stage} />
         </aside>
       </Card>

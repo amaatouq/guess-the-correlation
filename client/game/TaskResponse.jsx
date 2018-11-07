@@ -25,12 +25,12 @@ export default class TaskResponse extends React.Component {
   }
 
   handleChange = num => {
-    const { stage,player } = this.props;
+    const { stage, player } = this.props;
     if (stage.name !== "outcome") {
       const value = Math.round(num * 100) / 100;
       //this.setState({ guess: value });
       // this.throttledGuessUpdate(value);
-      player.round.set("guess", value)
+      player.round.set("guess", value);
     }
   };
 
@@ -108,6 +108,9 @@ export default class TaskResponse extends React.Component {
   }
 
   renderFeedback = (player, round) => {
+    const { game } = this.props;
+    const peersFeedback = game.treatment.peersFeedback;
+
     return (
       <div>
         <HTMLTable>
@@ -128,7 +131,13 @@ export default class TaskResponse extends React.Component {
               </td>
               <td>{round.get("task").correctAnswer}</td>
               <td>
-                <strong style={{ color: player.round.get("scoreColor") }}>
+                <strong
+                  style={{
+                    color: peersFeedback
+                      ? player.round.get("scoreColor")
+                      : "black"
+                  }}
+                >
                   +{player.round.get("score")}
                 </strong>
               </td>
@@ -140,16 +149,16 @@ export default class TaskResponse extends React.Component {
   };
 
   render() {
-    const { stage, round, player } = this.props;
+    const { game, stage, round, player } = this.props;
     //todo: add this back after the experiment
-    const feedbackTime = round.get("displayFeedback");
 
     //if the player already submitted, don't show the slider or submit button
     if (player.stage.submitted) {
       return this.renderSubmitted();
     }
-
+    const feedbackTime = round.get("displayFeedback");
     const isOutcome = stage.name === "outcome";
+    const selfFeedback = game.treatment.selfFeedback;
 
     return (
       <div className="task-response">
@@ -159,7 +168,10 @@ export default class TaskResponse extends React.Component {
             {this.renderSlider(player, round, isOutcome)}
           </FormGroup>
 
-          {isOutcome ? this.renderFeedback(player, round) : null}
+          {/*We only show self feedback if it is feedback time & we show individual feedback & it is outcome*/}
+          {isOutcome && feedbackTime && selfFeedback
+            ? this.renderFeedback(player, round)
+            : null}
 
           <FormGroup>
             <Button type="submit" icon={"tick"} large={true} fill={true}>

@@ -3,8 +3,6 @@ import { render } from "react-dom";
 import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import "@blueprintjs/core/lib/css/blueprint.css";
 
-
-
 import Empirica from "meteor/empirica:core";
 
 import Round from "./game/Round";
@@ -32,7 +30,9 @@ Empirica.introSteps(game => {
   if (game.treatment.altersCount > 1) {
     steps.push(InteractiveGuessStage);
   }
-  steps.push(OutcomeStage);
+  if (game.treatment.feedbackRate > 0 || game.treatment.altersCount > 1) {
+    steps.push(OutcomeStage);
+  }
   steps.push(MoreAboutCorrelations);
   steps.push(Quiz);
   return steps;

@@ -53,21 +53,24 @@ export default class SocialInteraction extends React.Component {
     const roundScore = otherPlayer.round.get("score") || 0;
 
     const feedbackTime = round.get("displayFeedback");
+    const peersFeedback = game.treatment.peersFeedback;
 
     return (
       <Card className={"alter"} elevation={Elevation.TWO} key={otherPlayer._id}>
         <div className="info">
           <img src={otherPlayer.get("avatar")} className="profile-avatar" />
           {/*only show the scores of the alters if feedback is allowed*/}
-          {feedbackTime ? <Icon icon={"dollar"} /> : null}
-          {feedbackTime ? <span>{cumulativeScore} </span> : null}
-          {feedbackTime ? (
-            <span style={{ color: otherPlayer.round.get("scoreColor") }}>
-              <strong>
-                (+
-                {roundScore})
-              </strong>
-            </span>
+          {feedbackTime && peersFeedback ? (
+            <div>
+              <Icon icon={"dollar"} />
+              <span>{cumulativeScore} </span>
+              <span style={{ color: otherPlayer.round.get("scoreColor") }}>
+                <strong>
+                  (+
+                  {roundScore})
+                </strong>
+              </span>
+            </div>
           ) : null}
         </div>
         {game.treatment.rewiring ? this.renderUnfollow(otherPlayer._id) : null}
@@ -80,29 +83,32 @@ export default class SocialInteraction extends React.Component {
   }
 
   renderLeftColumn(player, alterIds, feedbackTime) {
+    const { game } = this.props;
     const cumulativeScore = player.get("cumulativeScore") || 0;
     const roundScore = player.round.get("score") || 0;
+    const peersFeedback = game.treatment.peersFeedback;
 
     return (
       <div className="right" key="left" style={{ minWidth: "18rem" }}>
-        {feedbackTime ? (
-          <p className="bp3-ui-text">
-            <strong>Score:</strong> Total (+increment)
-          </p>
-        ) : null}
-
-        {feedbackTime ? (
-          <p style={{ textIndent: "1em" }}>
+        {feedbackTime && peersFeedback ? (
+          <div>
+            <p className="bp3-ui-text">
+              <strong>Score:</strong> Total (+increment)
+            </p>
             <Icon icon={"dollar"} />
             <span>{cumulativeScore}</span>
-            <span style={{ color: player.round.get("scoreColor") }}>
+            <span
+              style={{
+                color: peersFeedback ? player.round.get("scoreColor") : "black"
+              }}
+            >
               <strong>
                 {" "}
                 (+
                 {roundScore})
               </strong>
             </span>
-          </p>
+          </div>
         ) : null}
 
         <p>
@@ -114,10 +120,12 @@ export default class SocialInteraction extends React.Component {
   }
 
   renderNonAlter(otherPlayer) {
-    const { player, round } = this.props;
+    const { game, player, round } = this.props;
     const cumulativeScore = otherPlayer.get("cumulativeScore") || 0;
     const roundScore = otherPlayer.round.get("score") || 0;
     const feedbackTime = round.get("displayFeedback");
+    const peersFeedback = game.treatment.peersFeedback;
+
     return (
       <div className="non-alter" key={otherPlayer._id}>
         <Button
@@ -128,16 +136,18 @@ export default class SocialInteraction extends React.Component {
           disabled={player.stage.submitted}
         />
         <img src={otherPlayer.get("avatar")} className="profile-avatar" />
-        {feedbackTime ? <Icon icon={"dollar"} /> : null}
-        {feedbackTime ? <span>{cumulativeScore} </span> : null}
-        {feedbackTime ? (
-          <span style={{ color: otherPlayer.round.get("scoreColor") }}>
-            <strong>
-              {" "}
-              (+
-              {roundScore})
-            </strong>
-          </span>
+        {feedbackTime && peersFeedback ? (
+          <div>
+            <Icon icon={"dollar"} />
+            <span>{cumulativeScore} </span>
+            <span style={{ color: otherPlayer.round.get("scoreColor") }}>
+              <strong>
+                {" "}
+                (+
+                {roundScore})
+              </strong>
+            </span>
+          </div>
         ) : null}
       </div>
     );

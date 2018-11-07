@@ -1,6 +1,6 @@
 treatments: []
 factorTypes:
-  - _id: QrrhazrFHSJ7NdhaY
+  - _id: 6u6QG9oBfEgRPZiDp
     name: playerCount
     description: The Number of players participating in the given game.
     required: true
@@ -53,6 +53,37 @@ factorTypes:
     type: Number
     min: 0
     max: 1
+  - _id: Cp75drvkuSL2jeiMW
+    name: selfFeedback
+    description: whether to show feedback about one's performance
+    required: false
+    type: Boolean
+  - _id: Cp15drvkuSL3jEiWw
+    name: peersFeedback
+    description: whether to show feedback about one's peers
+    required: false
+    type: Boolean
+  - _id: AcPdcacgL6Yt9dir5
+    name: difficultyTypes
+    description: how to distribute difficulties across players
+    required: false
+    type: String
+    min: 1
+    max: 100
+  - _id: pTddCTs4F5i76Ps2u
+    name: basePay
+    description: how much to pay them for participating in the expeirment
+    required: false
+    type: Number
+    min: 0
+    max: 100
+  - _id: 5hKau3zXYmnKyezQ8
+    name: conversionRate
+    description: the factor that converts game points into real dollar money
+    required: true
+    type: Number
+    min: 0
+    max: 1
   - _id: ivryKtaipqLtfguqP
     name: nRounds
     description: This is the number of rounds for the game
@@ -61,11 +92,11 @@ factorTypes:
     min: 1
     max: 20
 factors:
-  - _id: PhBDTLNAKQojqZyqW
+  - _id: 862tyf69PQ3bMsCEY
     name: 'true'
     value: true
     factorTypeId: wAD8GzhvbTy4wHimY
-  - _id: rnpkyrjZNXmDhxPDD
+  - _id: c8sHHFSgkbzAEE2ao
     name: 'false'
     value: false
     factorTypeId: wAD8GzhvbTy4wHimY

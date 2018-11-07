@@ -33,9 +33,9 @@ export default class YourGuessStage extends React.Component {
     this.setState({ time: timeLeftVar });
     this.startTimer();
   }
-  
+
   //prevents memory leak: https://egghead.io/lessons/react-stop-memory-leaks-with-componentwillunmount-lifecycle-method-in-react
-  componentWillUnmount(){
+  componentWillUnmount() {
     clearInterval(this.timer);
     clearInterval(this.countDown);
   }
@@ -161,11 +161,15 @@ export default class YourGuessStage extends React.Component {
                     </span>
                   </div>
                   {/*We always show individual level feedback*/}
-                  <div className="profile-score">
-                    <h4 className="bp3-heading">Total score</h4>
-                    <Icon icon="dollar" iconSize={20} title={"dollar-sign"} />
-                    <span>{player.get("instructionsCumulativeScore")}</span>
-                  </div>
+                  {/*We show individual level feedback only in some cases*/}
+                  {game.treatment.feedbackRate > 0 &&
+                  game.treatment.selfFeedback ? (
+                    <div className="profile-score">
+                      <h4 className="bp3-heading">Total score</h4>
+                      <Icon icon="dollar" iconSize={20} title={"dollar-sign"} />
+                      <span>{player.get("instructionsCumulativeScore")}</span>
+                    </div>
+                  ) : null}
                   {renderTimer(remainingSeconds)}
                 </aside>
               </Card>

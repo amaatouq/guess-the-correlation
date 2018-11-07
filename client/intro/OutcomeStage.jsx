@@ -12,6 +12,7 @@ import {
   Label,
   RangeSlider
 } from "@blueprintjs/core";
+import Slider from "meteor/empirica:slider";
 
 const avatarNames = "abcdefghijklmnopqrstuvwxyz".split("");
 
@@ -68,6 +69,8 @@ export default class OutcomeStage extends React.Component {
       fakePlayers: fakePlayers,
       feedbackTime: game.treatment.feedbackRate > 0,
       feedbackRate: game.treatment.feedbackRate,
+      selfFeedback: game.treatment.selfFeedback,
+      peersFeedback: game.treatment.peersFeedback,
       rewiring: game.treatment.rewiring,
       social: game.treatment.playerCount === 0,
       submitted: false,
@@ -203,7 +206,7 @@ export default class OutcomeStage extends React.Component {
     const roundScore = otherPlayer.score || 0;
 
     const feedbackTime = this.state.feedbackTime;
-
+    const peersFeedback = this.state.peersFeedback;
     return (
       <Card
         className={"alter"}
@@ -213,9 +216,11 @@ export default class OutcomeStage extends React.Component {
         <div className="info">
           <img src={otherPlayer.avatar} className="profile-avatar" />
           {/*only show the scores of the alters if feedback is allowed*/}
-          {feedbackTime ? <Icon icon={"dollar"} /> : null}
-          {feedbackTime ? <span>{cumulativeScore} </span> : null}
-          {feedbackTime ? (
+          {feedbackTime && peersFeedback ? <Icon icon={"dollar"} /> : null}
+          {feedbackTime && peersFeedback ? (
+            <span>{cumulativeScore} </span>
+          ) : null}
+          {feedbackTime && peersFeedback ? (
             <span style={{ color: otherPlayer.scoreColor }}>
               <strong>
                 (+
@@ -234,17 +239,13 @@ export default class OutcomeStage extends React.Component {
     const roundScore = player.get("instructionsScore") || 0;
 
     const feedbackTime = this.state.feedbackTime;
+    const peersFeedback = this.state.peersFeedback;
 
     return (
       <div className="right" key="right1" style={{ minWidth: "18rem" }}>
-        {feedbackTime ? (
-          <p>
+        {feedbackTime && peersFeedback ? (
+          <span>
             <strong>Score:</strong> Total (+increment)
-          </p>
-        ) : null}
-
-        {feedbackTime ? (
-          <p style={{ textIndent: "1em" }}>
             <Icon icon={"dollar"} />
             <span>{cumulativeScore}</span>
             <span style={{ color: player.get("instructionsScoreColor") }}>
@@ -254,7 +255,7 @@ export default class OutcomeStage extends React.Component {
                 {roundScore})
               </strong>
             </span>
-          </p>
+          </span>
         ) : null}
 
         <p>
@@ -269,6 +270,7 @@ export default class OutcomeStage extends React.Component {
     const cumulativeScore = otherPlayer.cumulativeScore || 0;
     const roundScore = otherPlayer.score || 0;
     const feedbackTime = this.state.feedbackTime;
+    const peersFeedback = this.state.peersFeedback;
     return (
       <div className="non-alter" key={`non_alter_${otherPlayer._id}`}>
         <Button
@@ -279,9 +281,9 @@ export default class OutcomeStage extends React.Component {
           disabled={this.state.submitted}
         />
         <img src={otherPlayer.avatar} className="profile-avatar" />
-        {feedbackTime ? <Icon icon={"dollar"} /> : null}
-        {feedbackTime ? <span>{cumulativeScore} </span> : null}
-        {feedbackTime ? (
+        {feedbackTime && peersFeedback ? <Icon icon={"dollar"} /> : null}
+        {feedbackTime && peersFeedback ? <span>{cumulativeScore} </span> : null}
+        {feedbackTime && peersFeedback ? (
           <span style={{ color: otherPlayer.scoreColor }}>
             <strong>
               {" "}
@@ -373,28 +375,34 @@ export default class OutcomeStage extends React.Component {
                   it is {player.get("instructionsGuess")})
                 </li>
 
-                <li>
-                  You will see the <strong>actual correlation</strong> value (in
-                  this case 0.89)
-                </li>
+                {game.treatment.feedbackRate > 0 &&
+                game.treatment.selfFeedback ? (
+                  <span>
+                    <li>
+                      You will see the <strong>actual correlation</strong> value
+                      (in this case 0.89)
+                    </li>
 
-                <li>
-                  You will see the{" "}
-                  <strong
-                    style={{ color: player.get("instructionsScoreColor") }}
-                  >
-                    score you earned this round (e.g.,{" "}
-                    {player.get("instructionsScore")} )
-                  </strong>
-                </li>
-
-                <li>
-                  You will see your <strong>cummulative score </strong> (e.g.,
-                  total of {player.get("instructionsCumulativeScore")})
-                </li>
+                    <li>
+                      You will see the{" "}
+                      <strong
+                        style={{ color: player.get("instructionsScoreColor") }}
+                      >
+                        score you earned this round (e.g.,{" "}
+                        {player.get("instructionsScore")} )
+                      </strong>
+                    </li>
+                    <li>
+                      You will see your <strong>cummulative score </strong>{" "}
+                      (e.g., total of{" "}
+                      {player.get("instructionsCumulativeScore")})
+                    </li>
+                  </span>
+                ) : null}
 
                 {game.treatment.altersCount > 1 &&
-                game.treatment.feedbackRate > 0 ? (
+                game.treatment.feedbackRate > 0 &&
+                game.treatment.peersFeedback ? (
                   <li>You will also see the scores of all players</li>
                 ) : null}
 
@@ -449,12 +457,15 @@ export default class OutcomeStage extends React.Component {
                       />
                     </span>
                   </div>
-                  {/*We always show individual level feedback*/}
-                  <div className="profile-score">
-                    <h4 className="bp3-heading">Total score</h4>
-                    <Icon icon="dollar" iconSize={20} title={"dollar-sign"} />
-                    <span>{player.get("instructionsCumulativeScore")}</span>
-                  </div>
+                  {/*We show individual level feedback only in some cases*/}
+                  {game.treatment.feedbackRate > 0 &&
+                  game.treatment.selfFeedback ? (
+                    <div className="profile-score">
+                      <h4 className="bp3-heading">Total score</h4>
+                      <Icon icon="dollar" iconSize={20} title={"dollar-sign"} />
+                      <span>{player.get("instructionsCumulativeScore")}</span>
+                    </div>
+                  ) : null}
                   {OutcomeStage.renderTimer(remainingSeconds)}
                 </aside>
               </Card>
@@ -468,46 +479,62 @@ export default class OutcomeStage extends React.Component {
                   <form onSubmit={this.handleSubmit}>
                     <FormGroup>
                       <Label>Your guess of the correlation is: {guess}</Label>
-
-                      <RangeSlider
-                        className={"range-slider"}
-                        disabled={true}
-                        min={0}
-                        max={1}
-                        stepSize={0.01}
-                        labelStepSize={0.25}
-                        value={guess ? [guess, 0.89].sort() : [0.89, 0.89]}
-                      />
+                      {game.treatment.feedbackRate > 0 &&
+                      game.treatment.selfFeedback ? (
+                        <RangeSlider
+                          className={"range-slider"}
+                          disabled={true}
+                          min={0}
+                          max={1}
+                          stepSize={0.01}
+                          labelStepSize={0.25}
+                          value={guess ? [guess, 0.89].sort() : [0.89, 0.89]}
+                        />
+                      ) : (
+                        <Slider
+                          min={0}
+                          max={1}
+                          stepSize={0.01}
+                          labelStepSize={0.25}
+                          value={guess}
+                          hideHandleOnEmpty
+                          disabled={true}
+                        />
+                      )}
                     </FormGroup>
-                    <div>
-                      <HTMLTable>
-                        <thead>
-                          <tr>
-                            <th>Your guess</th>
-                            <th>Actual correlation</th>
-                            <th>Score increment</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td align="center">
-                              {player.get("instructionsGuess") ||
-                                "No guess given"}
-                            </td>
-                            <td>{0.89}</td>
-                            <td>
-                              <strong
-                                style={{
-                                  color: player.get("instructionsScoreColor")
-                                }}
-                              >
-                                +{player.get("instructionsScore")}
-                              </strong>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </HTMLTable>
-                    </div>
+
+                    {game.treatment.feedbackRate > 0 &&
+                    game.treatment.selfFeedback ? (
+                      <div>
+                        <HTMLTable>
+                          <thead>
+                            <tr>
+                              <th>Your guess</th>
+                              <th>Actual correlation</th>
+                              <th>Score increment</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td align="center">
+                                {player.get("instructionsGuess") ||
+                                  "No guess given"}
+                              </td>
+                              <td>{0.89}</td>
+                              <td>
+                                <strong
+                                  style={{
+                                    color: player.get("instructionsScoreColor")
+                                  }}
+                                >
+                                  +{player.get("instructionsScore")}
+                                </strong>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </HTMLTable>
+                      </div>
+                    ) : null}
                     {this.state.submitted ? (
                       <FormGroup>
                         <Button

@@ -21,3 +21,4 @@ less@2.8.0
 empirica:core
 empirica:slider
 underscore@1.0.10
+mdg:meteor-apm-agent

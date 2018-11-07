@@ -16,6 +16,7 @@ Empirica.onRoundStart((game, round, players) => {
   players.forEach(player => {
     player.round.set("alterIds", player.get("alterIds"));
     player.round.set("guess", undefined);
+    player.round.set("difficulty", player.get("difficulty"));
   });
 
   const feedbackTime =
@@ -40,6 +41,10 @@ Empirica.onStageStart((game, round, stage, players) => {
 Empirica.onStageEnd((game, round, stage, players) => {
   console.log("stage", stage.name, "ended");
   if (stage.name === "response") {
+    //to keep track of the initial guess easily for analysis
+    players.forEach(player => {
+      player.round.set("initialGuess", player.round.get("guess"));
+    });
     computeScore(players, round);
   } else if (stage.name === "interactive") {
     //after the 'interactive' stage, we compute the score and color it

@@ -51,6 +51,25 @@ function randomChoice(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
+function getDifficulty(player, i, difficultyTypes) {
+  let difficulty = null;
+  if (difficultyTypes === "equal_mix") {
+    //equal number of difficulties .. this can be changed to change the fraction of easy/medium/hard
+    difficulty = difficulties[(i + 1) % difficulties.length];
+    console.log(
+      "my difficulty is ",
+      difficulties[(i + 1) % difficulties.length]
+    );
+  } else {
+    //if not equal distribution of difficulties, then we either use what is passed or random if nothing is passed
+    difficulty = difficulties.includes(difficultyTypes)
+      ? difficultyTypes
+      : randomChoice(difficulties);
+  }
+
+  return difficulty;
+}
+
 // gameInit is where the structure of a game is defined.
 // Just before every game starts, once all the players needed are ready, this
 // function is called with the treatment and the list of players.
@@ -66,31 +85,23 @@ Empirica.gameInit((game, treatment, players) => {
   //prepare players by creating the network
   const playerIds = _.pluck(players, "_id");
   players.forEach((player, i) => {
+    player.set("cumulativeScore", 0);
+    player.set("bonus", 0);
+
+    player.set("avatar", getAvatar(player, i));
+
+    player.set(
+      "difficulty",
+      getDifficulty(player, i, game.treatment.difficultyTypes)
+    );
     const alterIds = getAlters(
       player,
       i,
       playerIds,
       game.treatment.altersCount
     );
-
-    player.set("avatar", getAvatar(player, i));
-    if (game.treatment.playerCount > 1) {
-      //equal number of difficulties .. this can be changed to change the fraction of easy/medium/hard
-      player.set("difficulty", difficulties[(i + 1) % difficulties.length]);
-      console.log(
-        "my difficulty is ",
-        difficulties[(i + 1) % difficulties.length]
-      );
-    } else {
-      //if we only have one player, we randomly choose a difficulty
-      player.set("difficulty", randomChoice(difficulties));
-    }
-
     player.set("alterIds", alterIds);
-    player.set("cumulativeScore", 0);
-    player.set("bonus", 0);
   });
-  
 
   _.times(game.treatment.nRounds, i => {
     const round = game.addRound();
