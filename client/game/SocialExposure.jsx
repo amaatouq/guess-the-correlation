@@ -49,9 +49,10 @@ export default class SocialExposure extends React.Component {
     const feedbackTime = round.get("displayFeedback");
 
     //all players sorted by performance in descending order if feedback, otherwise, shuffle but seed by player id (the same player will see the same order for the entire game
-    const allPlayers = feedbackTime
-      ? _.sortBy(game.players, p => p.get("cumulativeScore")).reverse()
-      : shuffle(game.players, player._id);
+    const allPlayers =
+      feedbackTime && game.treatment.peersFeedback
+        ? _.sortBy(game.players, p => p.get("cumulativeScore")).reverse()
+        : shuffle(game.players, player._id);
 
     const alters = allPlayers.filter(p => alterIds.includes(p._id));
 

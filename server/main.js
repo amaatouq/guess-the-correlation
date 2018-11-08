@@ -43,8 +43,12 @@ function getAlters(player, playerIndex, playerIds, alterCount) {
   return alterIds;
 }
 
-function getAvatar(player, i) {
-  return i > 16 ? `/avatars/jdenticon/${player._id}` : `/avatars/${i}.png`;
+function getAvatar(player, i, type) {
+  if (type === "animals") {
+    return i > 16 ? `/avatars/jdenticon/${player._id}` : `/avatars/${i}.png`;
+  } else {
+    return `/avatars/jdenticon/${player._id}`;
+  }
 }
 
 function randomChoice(arr) {
@@ -88,7 +92,7 @@ Empirica.gameInit((game, treatment, players) => {
     player.set("cumulativeScore", 0);
     player.set("bonus", 0);
 
-    player.set("avatar", getAvatar(player, i));
+    player.set("avatar", getAvatar(player, i, "abstract"));
 
     player.set(
       "difficulty",

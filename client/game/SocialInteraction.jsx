@@ -185,9 +185,10 @@ export default class SocialInteraction extends React.Component {
     //actual Player objects and not only Ids for alters and nonAlters
 
     //all players sorted by performance in descending order if feedback, otherwise, shuffle them
-    const allPlayers = feedbackTime
-      ? _.sortBy(game.players, p => p.get("cumulativeScore")).reverse()
-      : shuffle(game.players, player._id);
+    const allPlayers =
+      feedbackTime && game.treatment.peersFeedback
+        ? _.sortBy(game.players, p => p.get("cumulativeScore")).reverse()
+        : shuffle(game.players, player._id);
 
     const alters = allPlayers.filter(p => alterIds.includes(p._id));
     const nonAlters = allPlayers.filter(p => nonAlterIds.includes(p._id));

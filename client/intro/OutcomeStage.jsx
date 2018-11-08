@@ -372,7 +372,7 @@ export default class OutcomeStage extends React.Component {
               <ul>
                 <li>
                   You will see <strong>your final guess</strong> (in this case
-                  it is {player.get("instructionsGuess")})
+                  it is {player.get("instructionsGuess") || "None"})
                 </li>
 
                 {game.treatment.feedbackRate > 0 &&
@@ -393,7 +393,7 @@ export default class OutcomeStage extends React.Component {
                       </strong>
                     </li>
                     <li>
-                      You will see your <strong>cummulative score </strong>{" "}
+                      You will see your total <strong>cumulative score </strong>{" "}
                       (e.g., total of{" "}
                       {player.get("instructionsCumulativeScore")})
                     </li>
@@ -412,7 +412,7 @@ export default class OutcomeStage extends React.Component {
                       You can use the{" "}
                       <strong>
                         unfollow and follow buttons to choose a maximum of{" "}
-                        {game.treatment.altersCount} players
+                        {game.treatment.altersCount} players for the next round.
                       </strong>
                     </span>
                   </li>
@@ -524,7 +524,9 @@ export default class OutcomeStage extends React.Component {
                               <td>
                                 <strong
                                   style={{
-                                    color: player.get("instructionsScoreColor")
+                                    color: game.treatment.peersFeedback
+                                      ? player.get("instructionsScoreColor")
+                                      : "black"
                                   }}
                                 >
                                   +{player.get("instructionsScore")}
