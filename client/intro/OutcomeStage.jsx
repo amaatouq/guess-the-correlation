@@ -386,7 +386,11 @@ export default class OutcomeStage extends React.Component {
                     <li>
                       You will see the{" "}
                       <strong
-                        style={{ color: player.get("instructionsScoreColor") }}
+                        style={{
+                          color: game.treatment.peersFeedback
+                            ? player.get("instructionsScoreColor")
+                            : "black"
+                        }}
                       >
                         score you earned this round (e.g.,{" "}
                         {player.get("instructionsScore")} )

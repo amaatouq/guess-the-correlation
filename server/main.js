@@ -28,14 +28,6 @@ function getAlters(player, playerIndex, playerIds, alterCount) {
     alterIds = playerIds.filter(
       (elt, i) => initial_network[playerIndex].indexOf(i) > -1
     );
-    console.log(
-      "player ",
-      playerIndex,
-      "got: ",
-      initial_network[playerIndex],
-      "actual alters: ",
-      alterIds
-    );
   } else {
     alterIds = _.sample(_.without(playerIds, player._id), alterCount);
   }
@@ -85,6 +77,7 @@ function getDifficulty(player, i, difficultyTypes) {
 //TODO: return to this once Nicolas fixes this problem
 Empirica.gameInit((game, treatment, players) => {
   const tasks = game.treatment.randomizeTask ? _.shuffle(taskData) : taskData;
+  console.log("treatments will start:", game.treatment);
 
   //prepare players by creating the network
   const playerIds = _.pluck(players, "_id");

@@ -1,6 +1,70 @@
-? treatments
+treatments:
+  - name: solo
+    factorIds:
+      - LDYtorBMemEchWxoB
+      - qL8h26YncBQyJA7fq
+      - 3kYYXaky46XwqCqs3
+      - MdzxCgDh5rZyYt4S7
+      - KaGAp39QNwcn3HNE6
+      - i2Ca8myYtMDRjCJHw
+      - 3oGEScooi2BhsEKEP
+      - 2YsCrAijbvTAMMo8z
+      - GNXTq424wgxMYAiNb
+      - KWowhkuNyGcWvp2bn
+      - oBQd3x8wKE3f9GkKC
+      - uo5hoxgHYWRGuG4oR
+      - 3ahp7KyDHp4KQCcM6
+      - xBckkRe2KEqcuyf5P
+  - name: dynamic_no_feedback
+    factorIds:
+      - 9ssjc26yHDZM2nYnx
+      - qL8h26YncBQyJA7fq
+      - ekcnsAf3Y3jvvqTGb
+      - MdzxCgDh5rZyYt4S7
+      - Nyu5NejdAuvn2CqYu
+      - i2Ca8myYtMDRjCJHw
+      - 3oGEScooi2BhsEKEP
+      - 2YsCrAijbvTAMMo8z
+      - GNXTq424wgxMYAiNb
+      - KWowhkuNyGcWvp2bn
+      - oBQd3x8wKE3f9GkKC
+      - uo5hoxgHYWRGuG4oR
+      - 3ahp7KyDHp4KQCcM6
+      - h4Fbts28p9uK9rdyK
+  - name: dynamic_self_feedback
+    factorIds:
+      - 9ssjc26yHDZM2nYnx
+      - qL8h26YncBQyJA7fq
+      - ekcnsAf3Y3jvvqTGb
+      - MdzxCgDh5rZyYt4S7
+      - Nyu5NejdAuvn2CqYu
+      - CCuSfLovDqt7gGu8M
+      - 3oGEScooi2BhsEKEP
+      - 2YsCrAijbvTAMMo8z
+      - GNXTq424wgxMYAiNb
+      - xQYgXc66TSLmXBHHk
+      - oBQd3x8wKE3f9GkKC
+      - uo5hoxgHYWRGuG4oR
+      - 3ahp7KyDHp4KQCcM6
+      - ftXgu4kXuin2mFeK5
+  - name: dynamic_full_feedback
+    factorIds:
+      - 9ssjc26yHDZM2nYnx
+      - qL8h26YncBQyJA7fq
+      - ekcnsAf3Y3jvvqTGb
+      - MdzxCgDh5rZyYt4S7
+      - Nyu5NejdAuvn2CqYu
+      - CCuSfLovDqt7gGu8M
+      - 3oGEScooi2BhsEKEP
+      - 2YsCrAijbvTAMMo8z
+      - GNXTq424wgxMYAiNb
+      - xQYgXc66TSLmXBHHk
+      - 5zp8oYE298QbeBWMp
+      - uo5hoxgHYWRGuG4oR
+      - 3ahp7KyDHp4KQCcM6
+      - F2EhmhqbMZXPqKmur
 factorTypes:
-  - _id: zbBiXuE5R3SySQH4o
+  - _id: SaNXnPjBfxztr6uwE
     name: playerCount
     description: The Number of players participating in the given game.
     required: true
@@ -92,38 +156,38 @@ factorTypes:
     min: 0
     max: 1
 factors:
-  - _id: HDjyRQ4qbgPvk8fzx
-    name: "true"
+  - _id: Nyu5NejdAuvn2CqYu
+    name: 'true'
     value: true
     factorTypeId: wAD8GzhvbTy4wHimY
-  - _id: JbazebYNtuWevZQvP
-    name: "false"
+  - _id: KaGAp39QNwcn3HNE6
+    name: 'false'
     value: false
     factorTypeId: wAD8GzhvbTy4wHimY
-  - _id: w5h78Y8ez9KcWJPDt
-    name: "true"
+  - _id: xQYgXc66TSLmXBHHk
+    name: 'true'
     value: true
     factorTypeId: Cp75drvkuSL2jeiMW
-  - _id: NTaYAj5MWigZGWAL9
-    name: "false"
+  - _id: KWowhkuNyGcWvp2bn
+    name: 'false'
     value: false
     factorTypeId: Cp75drvkuSL2jeiMW
-  - _id: HSWXdFt73zaGhGrsj
-    name: "true"
+  - _id: 5zp8oYE298QbeBWMp
+    name: 'true'
     value: true
     factorTypeId: Cp15drvkuSL3jEiWw
-  - _id: g4vPNzQeMfEC6Eafg
-    name: "false"
+  - _id: oBQd3x8wKE3f9GkKC
+    name: 'false'
     value: false
     factorTypeId: Cp15drvkuSL3jEiWw
   - _id: h2BqhGfheRcqrQsWN
     name: solo
     value: 1
-    factorTypeId: zbBiXuE5R3SySQH4o
+    factorTypeId: SaNXnPjBfxztr6uwE
   - _id: 9ssjc26yHDZM2nYnx
     name: group
     value: 12
-    factorTypeId: zbBiXuE5R3SySQH4o
+    factorTypeId: SaNXnPjBfxztr6uwE
   - _id: qL8h26YncBQyJA7fq
     name: none
     value: 0
@@ -177,13 +241,33 @@ factors:
     value: equal_mix
     factorTypeId: AcPdcacgL6Yt9dir5
   - _id: 3ahp7KyDHp4KQCcM6
-    name: "2"
+    name: '2'
     value: 2
     factorTypeId: pTddCTs4F5i76Ps2u
   - _id: iS6ggGpJRwQ8zYLnQ
     name: random
     value: random
     factorTypeId: AcPdcacgL6Yt9dir5
+  - _id: LDYtorBMemEchWxoB
+    name: small_group
+    value: 6
+    factorTypeId: SaNXnPjBfxztr6uwE
+  - _id: ftXgu4kXuin2mFeK5
+    name: '0.03'
+    value: 0.03
+    factorTypeId: 5hKau3zXYmnKyezQ8
+  - _id: h4Fbts28p9uK9rdyK
+    name: '0.035'
+    value: 0.035
+    factorTypeId: 5hKau3zXYmnKyezQ8
+  - _id: xBckkRe2KEqcuyf5P
+    name: '0.022'
+    value: 0.022
+    factorTypeId: 5hKau3zXYmnKyezQ8
+  - _id: F2EhmhqbMZXPqKmur
+    name: '0.0275'
+    value: 0.0275
+    factorTypeId: 5hKau3zXYmnKyezQ8
 lobbyConfigs:
   - timeoutType: lobby
     timeoutInSeconds: 600
