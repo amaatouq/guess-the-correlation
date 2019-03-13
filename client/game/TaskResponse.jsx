@@ -98,11 +98,7 @@ export default class TaskResponse extends React.Component {
             labelStepSize={0.25}
             onChange={this.handleChange}
             onRelease={this.handleRelease}
-            value={
-              player.round.get("guess") === null
-                ? undefined
-                : player.round.get("guess") || 0
-            }
+            value={player.round.get("guess")}
             disabled={isOutcome}
             hideHandleOnEmpty
           />

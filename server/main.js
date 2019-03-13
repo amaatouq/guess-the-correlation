@@ -75,13 +75,14 @@ function getDifficulty(player, i, difficultyTypes) {
 // the game.
 
 //TODO: return to this once Nicolas fixes this problem
-Empirica.gameInit((game, treatment, players) => {
+Empirica.gameInit(game => {
   const tasks = game.treatment.randomizeTask ? _.shuffle(taskData) : taskData;
   console.log("treatments will start:", game.treatment);
 
+
   //prepare players by creating the network
-  const playerIds = _.pluck(players, "_id");
-  players.forEach((player, i) => {
+  const playerIds = _.pluck(game.players, "_id");
+  game.players.forEach((player, i) => {
     player.set("cumulativeScore", 0);
     player.set("bonus", 0);
 
@@ -133,7 +134,7 @@ Empirica.gameInit((game, treatment, players) => {
       round.addStage({
         name: "outcome",
         displayName: "Round Outcome",
-        durationInSeconds: treatment.stageDuration
+        durationInSeconds: game.treatment.stageDuration
       });
     }
   });

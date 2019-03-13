@@ -3,7 +3,7 @@ import Empirica from "meteor/empirica:core";
 // onGameStart is triggered once per game before the game starts, and before
 // the first onRoundStart. It receives the game and list of all the players in
 // the game.
-Empirica.onGameStart((game, players) => {
+Empirica.onGameStart(game => {
   game.set("justStarted", true); // I use this to play the sound on the UI when the game starts
 
   console.log("game", game._id, "started");
@@ -11,11 +11,11 @@ Empirica.onGameStart((game, players) => {
 
 // onRoundStart is triggered before each round starts, and before onStageStart.
 // It receives the same options as onGameStart, and the round that is starting.
-Empirica.onRoundStart((game, round, players) => {
+Empirica.onRoundStart((game, round) => {
   console.log("round", round.index, "started");
-  players.forEach(player => {
+  game.players.forEach(player => {
     player.round.set("alterIds", player.get("alterIds"));
-    player.round.set("guess", undefined);
+    player.round.set("guess", null);
     player.round.set("difficulty", player.get("difficulty"));
   });
 
@@ -33,36 +33,36 @@ Empirica.onRoundStart((game, round, players) => {
 
 // onRoundStart is triggered before each stage starts.
 // It receives the same options as onRoundStart, and the stage that is starting.
-Empirica.onStageStart((game, round, stage, players) => {
+Empirica.onStageStart((game, round, stage) => {
   console.log("stage", stage.name, "started");
 });
 
 // It receives the same options as onRoundEnd, and the stage that just ended.
-Empirica.onStageEnd((game, round, stage, players) => {
+Empirica.onStageEnd((game, round, stage) => {
   console.log("stage", stage.name, "ended");
   if (stage.name === "response") {
     //to keep track of the initial guess easily for analysis
-    players.forEach(player => {
+    game.players.forEach(player => {
       player.round.set("initialGuess", player.round.get("guess"));
     });
-    computeScore(players, round);
+    computeScore(game.players, round);
   } else if (stage.name === "interactive") {
     //after the 'interactive' stage, we compute the score and color it
-    computeScore(players, round);
+    computeScore(game.players, round);
     if (game.treatment.altersCount > 0 && round.get("displayFeedback")) {
-      colorScores(players);
+      colorScores(game.players);
     }
   }
 });
 
 // onRoundEnd is triggered after each round.
 // It receives the same options as onGameEnd, and the round that just ended.
-Empirica.onRoundEnd((game, round, players) => {
+Empirica.onRoundEnd((game, round) => {
   console.log("round", round.index, "ended");
-  players.forEach(player => {
+  game.players.forEach(player => {
     const currentScore = player.get("cumulativeScore");
     const roundScore = player.round.get("score");
-    const cumScore = Math.round((currentScore + roundScore) * 100) / 100;
+    const cumScore = Math.round((currentScore + roundScore) * 10) / 10;
     player.set("cumulativeScore", cumScore);
   });
 
@@ -78,16 +78,16 @@ Empirica.onRoundEnd((game, round, players) => {
       0;
   //if it is time for a shock to arrive, then shock the players
   // i.e., change the difficulty of the task for them.
-  shockTime ? shock(players) : null;
+  shockTime ? shock(game.players) : null;
   console.log("round:", round.index, ", is it shock time?", shockTime);
 });
 
 // onRoundEnd is triggered when the game ends.
 // It receives the same options as onGameStart.
-Empirica.onGameEnd((game, players) => {
+Empirica.onGameEnd(game => {
   console.log("The game", game._id, "has ended");
   const conversionRate = game.treatment.conversionRate || 1;
-  players.forEach(player => {
+  game.players.forEach(player => {
     const bonus =
       Math.round(player.get("cumulativeScore") * conversionRate * 100) / 100;
     player.set("bonus", bonus);
@@ -107,7 +107,7 @@ function computeScore(players, round) {
         ? 1
         : Math.abs(correctAnswer - guess);
 
-    const score = Math.round((1 - error) ** 2 * 100) / 10;
+    const score = Math.round((1 - error) * 10) / 10;
 
     player.round.set("score", score);
   });
