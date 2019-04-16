@@ -208,6 +208,7 @@ export default class ExitSurvey extends React.Component {
     return (
       <Centered>
         <div className="exit-survey">
+          {console.log(this.props)}
           {this.exitMessage(player, game)}
           <hr />
           {this.exitForm()}
