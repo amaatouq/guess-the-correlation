@@ -6,8 +6,41 @@ import {
   Callout,
   FormGroup,
   Label,
+  Toaster,
+  Position,
   RangeSlider
 } from "@blueprintjs/core";
+import { StageTimeWrapper } from "meteor/empirica:core";
+
+const WarningToaster = Toaster.create({
+  className: "warning-toaster",
+  position: Position.TOP
+});
+
+//timed button
+const TimedButton = StageTimeWrapper(props => {
+  const { onClick, activateAt, remainingSeconds, stage } = props;
+
+  const disabled = remainingSeconds > activateAt;
+  return (
+    <Button
+      onClick={onClick}
+      disabled={disabled}
+      intent={disabled ? "danger" : "primary"}
+      small={false}
+      type={"button"}
+      fill={true}
+    >
+      {disabled
+        ? "Wait for " +
+          Math.abs(remainingSeconds - activateAt) +
+          "s at least before submitting"
+        : stage.name === "outcome"
+        ? "Next"
+        : "Submit"}
+    </Button>
+  );
+});
 
 export default class TaskResponse extends React.Component {
   constructor(props) {
@@ -46,7 +79,20 @@ export default class TaskResponse extends React.Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    this.props.player.stage.submit();
+    const { stage, player } = this.props;
+    const guess = player.round.get("guess");
+
+    if (stage.name === "outcome") {
+      player.stage.submit();
+      return;
+    }
+    if (guess === null) {
+      WarningToaster.show({
+        message: "Please make a guess first using the slider."
+      });
+    } else {
+      this.props.player.stage.submit();
+    }
   };
 
   renderSubmitted = () => {
@@ -124,8 +170,7 @@ export default class TaskResponse extends React.Component {
           <tbody>
             <tr>
               <td align="center">
-                {player.round.get("guess") === undefined ||
-                player.round.get("guess") === null
+                {player.round.get("guess") === null
                   ? "No guess given"
                   : player.round.get("guess")}
               </td>
@@ -174,9 +219,16 @@ export default class TaskResponse extends React.Component {
             : null}
 
           <FormGroup>
-            <Button type="submit" icon={"tick"} large={true} fill={true}>
-              {isOutcome ? "Next" : "Submit"}
-            </Button>
+            <TimedButton
+              stage={stage}
+              player={player}
+              activateAt={26}
+              onClick={this.handleSubmit}
+            />
+
+            {/*<Button type="submit" icon={"tick"} large={true} fill={true}>*/}
+            {/*  {isOutcome ? "Next" : "Submit"}*/}
+            {/*</Button>*/}
           </FormGroup>
         </form>
       </div>

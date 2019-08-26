@@ -90,7 +90,7 @@ Empirica.onGameEnd(game => {
   game.players.forEach(player => {
     const bonus =
       Math.round(player.get("cumulativeScore") * conversionRate * 100) / 100;
-    player.set("bonus", bonus);
+    player.set("bonus", bonus * 10);
   });
 });
 

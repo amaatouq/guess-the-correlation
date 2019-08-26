@@ -41,7 +41,10 @@ export default class Overview extends React.Component {
           <p>
             <strong>What is a correlation?</strong>
             <br />
-            <a href="https://en.wikipedia.org/wiki/Pearson_product-moment_correlation_coefficient">
+            <a
+              target="_blank"
+              href="https://en.wikipedia.org/wiki/Pearson_product-moment_correlation_coefficient"
+            >
               Correlation{" "}
             </a>{" "}
             measures how closely related two variables are. For the example
