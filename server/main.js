@@ -79,7 +79,6 @@ Empirica.gameInit(game => {
   const tasks = game.treatment.randomizeTask ? _.shuffle(taskData) : taskData;
   console.log("treatments will start:", game.treatment);
 
-
   //prepare players by creating the network
   const playerIds = _.pluck(game.players, "_id");
   game.players.forEach((player, i) => {

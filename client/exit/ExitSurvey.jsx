@@ -42,7 +42,8 @@ export default class ExitSurvey extends React.Component {
           <strong>
             <em>${game.treatment.basePay} base reward</em>
           </strong>{" "}
-          for completing the HIT.
+          for completing the HIT ($0.1 paid upon the approval of the HIT and the
+          remaining $1.9 base pay will be paid as a bonus).
         </p>
       </div>
     );

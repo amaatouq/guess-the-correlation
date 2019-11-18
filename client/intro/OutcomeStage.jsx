@@ -399,7 +399,14 @@ export default class OutcomeStage extends React.Component {
                     <li>
                       You will see your total <strong>cumulative score </strong>{" "}
                       (e.g., total of{" "}
-                      {player.get("instructionsCumulativeScore")})
+                      {player.get("instructionsCumulativeScore")}).{" "}
+                      <strong>
+                        NOTE: Your game cumulative score is **NOT** your dollar
+                        bonus. Your dollar bonus is based on your performance
+                        (i.e., the cumulative score) and will be shown in the
+                        exit survey.
+                      </strong>
+                      .
                     </li>
                   </span>
                 ) : null}
