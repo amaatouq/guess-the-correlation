@@ -96,11 +96,11 @@ export default class Quiz extends React.Component {
                 required
               >
                 <Radio
-                  label="Estimate the correlation of two variables"
+                  label="Determine the direction of the moving dots"
                   value="estimate"
                 />
                 <Radio
-                  label="Count the nuber of points in a picture."
+                  label="Count the number of points in a picture."
                   value="count"
                 />
               </RadioGroup>
