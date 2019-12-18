@@ -85,7 +85,8 @@ Empirica.gameInit(game => {
     player.set("cumulativeScore", 0);
     player.set("bonus", 0);
 
-    player.set("avatar", getAvatar(player, i, "abstract"));
+
+    player.set("avatar", getAvatar(player, i, "animals"));
 
     player.set(
       "difficulty",
