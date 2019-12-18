@@ -96,7 +96,7 @@ export default class Quiz extends React.Component {
                 required
               >
                 <Radio
-                  label="Determine the direction of the moving dots"
+                  label="Estimate the correlation between two variables."
                   value="estimate"
                 />
                 <Radio

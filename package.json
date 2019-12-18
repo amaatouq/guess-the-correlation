@@ -5,8 +5,8 @@
     "start": "meteor run"
   },
   "dependencies": {
-    "@babel/runtime": "^7.1.2",
-    "@blueprintjs/core": "^3.7.0",
+    "@babel/runtime": "^7.7.6",
+    "@blueprintjs/core": "^3.22.3",
     "bcrypt": "3.0.1",
     "meteor-node-stubs": "0.4.1",
     "react": "16.5.2",
