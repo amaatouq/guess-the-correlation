@@ -9,7 +9,7 @@
     "@blueprintjs/core": "^3.22.3",
     "bcrypt": "^5.0.0",
     "meteor-node-stubs": "0.4.1",
-    "minimist": ">=0.2.1",
+    "minimist": ">=1.2.6",
     "react": "16.5.2",
     "react-dom": "16.5.2",
     "react-router-dom": "4.3.1",
